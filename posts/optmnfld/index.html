@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>The Beauty in Simplicity &middot; verbose: 1</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="verbose: 1" />
+
+		
+		<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">verbose: 1</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/posts/">
+                
+                <span>Blog</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        Albert Lam
+        <br>
+        <span>on&nbsp;</span><time datetime="2019-07-10 00:00:00 &#43;0000 UTC">July 10, 2019</time>
+</div>
+		<h1 class="post-title">The Beauty in Simplicity</h1>
+<div class="post-line"></div>
+
+		
+
+		<h2 id="manifold-learning">Manifold learning</h2>
+<p>This week's reading focused on <strong>manifold learning</strong> in Optimal Manifold Representation of Data: An Information Theoretic Approach by <a href="https://papers.nips.cc/paper/2399-optimal-manifold-representation-of-data-an-information-theoretic-approach.pdf">Chigirev and Bialek (2003)</a>. Central to manifold learning is the notion that many high dimensional datasets can often be explained by a few latent variables, or that rather than filling the entire probability space, the data lies on a lower dimensional <strong>manifold</strong>. The dimensionality of this manifold is then the dimensionality of the latent space, and the coordinate system of this manifold represents the latent variables. It may be helpful to first review how one may approach dimensionality reduction in a simpler setting before delving further into manifold learning. Let's have a look at <strong>principal component analysis (PCA)</strong>.</p>
+<h2 id="principal-component-analysis">Principal component analysis</h2>
+<p>Suppose we have a design matrix $X \in \mathbb{R}^{n \times p}$, where $x_1, \dots, x_n$ are the row vectors of $X$. Then, the <strong>singular value decomposition (SVD)</strong> of $X$ gives us</p>
+<p>$$
+\begin{align}
+X &amp;= U \Sigma W^{\intercal} \nonumber
+\end{align}
+$$</p>
+<p>where the columns of $U \in \mathbb{R}^{n \times n}$ are the left singular vectors of $X$, the columns of $W \in \mathbb{R}^{p \times p}$ are the right singular vectors of $X$, and $\Sigma \in \mathbb{R}^{n \times p}$ is a diagonal matrix with singular values $\sigma_{(k)}$ along the main diagonal for $k = 1, \dots, p$. Since the columns of $U$ and $W$ are orthogonal unit vectors, we can also write $X^{\intercal}X$ as</p>
+<p>$$
+\begin{align}
+X^\intercal X &amp;= W \Sigma^{\intercal} U^{\intercal} U \Sigma W^{\intercal} \nonumber \newline
+&amp;= W \Sigma^\intercal \Sigma W^{\intercal} \nonumber \newline
+&amp;= W \Sigma^2 W^{\intercal} \label{svd}
+\end{align}
+$$</p>
+<p>Observe that $X^{\intercal}X$ is square (with dimension $p$) and symmetric (and thus diagonalisable). Let $Q \in \mathbb{R}^{p \times p}$ be the orthogonal matrix of eigenvectors of $X^{\intercal}X$ and $\Lambda \in \mathbb{R}^{p \times p}$ be the diagonal matrix of corresponding eigenvalues. Then the resulting <strong>eigendecomposition</strong> of $X^{\intercal}X$ is</p>
+<p>$$
+\begin{align}
+X^{\intercal} X &amp;= Q \Lambda Q^{-1} \label{eigendecomp}
+\end{align}
+$$</p>
+<p>Equating $\eqref{eigendecomp}$ and $\eqref{svd}$, we have thus shown that the matrix of eigenvectors in $X^{\intercal}X$ are the same as the right singular vectors of $X$, and the square roots of the eigenvalues of $X^{\intercal}X$ are the same as the singular values of $X$. Now, recall that PCA is defined as an orthogonal linear transformation that maps the original data to a new coordinate system such that the projection along the $k^{th}$ coordinate is the $k^{th}$ largest for $k = 1, \dots, p$. More precisely, let the transformation be defined by the set of vectors $w_{(k)} \in \mathbb{R}^{p}$ that are applied to each row $x_{i} \in \mathbb{R}^{p}$ of $X$, such that the vector of <strong>principal component scores</strong> of $x_i$ transformed by $w_{(k)}$ is $t_{i,(k)} = [t_{1,(k)}, \dots, t_{p,(k)}]^{\intercal}$, where each entry of $t_{i,(k)}$ is given by</p>
+<p>$$
+\begin{align}
+t_{i, (k)}  &amp;= x_i \cdot w_{(k)} \nonumber
+\end{align}
+$$</p>
+<p>Define $X_{(k)}$ as $X$ after the first $k - 1$ principal components are removed. It follows that</p>
+<p>$$
+\begin{align}
+X_{(k)} &amp;= X - \sum_{s=1}^{k-1} X w_{(s)} w_{(s)}^{\intercal} \nonumber
+\end{align}
+$$</p>
+<p>and the $k^{th}$ weight vector $w_{(k)}$ can be computed as</p>
+<p>$$
+\begin{align}
+w_{(k)} &amp;= \underset{| w | = 1}{\mathrm{argmax}} \left \{ |X_{(k)} w |^2 \right \} \nonumber \newline
+&amp;= \mathrm{argmax} \left\{\frac{w^{\intercal} X_{(k)}^{\intercal} X_{(k)} w }{w^{\intercal}w} \right \} \label{optimprob}
+\end{align}
+$$</p>
+<p>Since $X^{\intercal}X$ is positive semi-definite, the solution to $\eqref{optimprob}$ is the $k^{th}$ largest eigenvector of $X^{\intercal}X$ and the value of the objective is the $k^{th}$ eigenvalue of $X^{\intercal}X$. It follows from above that the columns of $W$ are $w_{(1)}, \dots, w_{(p)}$,
+and the full principal components decomposition of $X$ can be given as</p>
+<p>$$
+\begin{align}
+T &amp;= XW \label{fullpca}
+\end{align}
+$$</p>
+<p>which maps a data vector $x_{i}$ from an original space of $p$ features to a new space of $p$ features which are uncorrelated over the dataset. Dimensionality reduction can thus we achieved by keeping only the first $L &lt; p$ principal components in $\eqref{fullpca}$, which gives the truncated transformation</p>
+<p>$$
+\begin{align}
+T_{L} &amp;= X W_{L} \nonumber
+\end{align}
+$$</p>
+<p>where $W_{L} \in \mathbb{R}^{p \times L}$ and $T_{L} \in \mathbb{R}^{n \times L}$, where the columns of $W_{L}$ are the first $L$ columns of $W$ and therefore the first $L$ eigenvectors of $X^{\intercal}X$.</p>
+<h2 id="generalising-dimensionality-reduction">Generalising dimensionality reduction</h2>
+<p>In summary, PCA and other traditional tools for dimensionality reduction tend to project the original dataset onto a <strong>hyperplane</strong>, making the reduced coordinates easy to interpret. However, they are unable to account for nonlinear correlations in a dataset, which requires relaxing the assumption that the data can be modelled as a hyperplane and instead allow for it to lie on a general low-dimensional manifold of unknown shape and dimensionality. Other attempts to accommodate for nonlinear correlations map the data into a higher dimensional feature space with the hope that the correlations will become linearised and PCA can then be applied.</p>
+<p><a href="https://papers.nips.cc/paper/2399-optimal-manifold-representation-of-data-an-information-theoretic-approach.pdf">Chigirev and Bialek (2003)</a> formulate  dimensionality reduction as a compression problem, where the bottleneck is the information available to manifold coordinates. The optimal manifold is then the best reconstruction of the original dataset under the restriction that the coordinates can only be transmitted through a channel of fixed capacity.</p>
+<h2 id="the-optimal-manifold">The optimal manifold</h2>
+<p>Suppose that we have a dataset $X$ in a high-dimensional state space $\mathbb{R}^{D}$ described by density $p(x)$, and we want to find a simpler description of the data. One possibility is to define a manifold $\mathcal{M}$ and a <strong>stochastic map</strong> $P_{\mathcal{M}}: x \rightarrow P_{\mathcal{M}}(\mu \mid x)$ to points $\mu$ on the manifold, which we say defines a <strong>manifold description</strong> of $X$. Now, let the <strong>distortion measure</strong> $D(\mathcal{M}, P_{\mathcal{M}}, p)$ be defined as</p>
+<p>$$
+\begin{align}
+D(\mathcal{M}, P_{\mathcal{M}}, p) &amp;= \int_{x \in \mathbb{R}^{D}} \int_{\mu \in \mathcal{M}} p(x) P_{\mathcal{M}} (\mu \mid x) | x - \mu |^2 \quad  D \mu d^{D} x \label{distortion}
+\end{align}
+$$</p>
+<p>The stochastic map $P_{\mathcal{M}}(\mu \mid x)$ and the density $p(x)$ define a joint probability function $P(\mathcal{M}, X)$ that allows us to calculate the mutual information between the data and its manifold representation:</p>
+<p>$$
+\begin{align}
+I(X, \mathcal{M}) &amp;= \int_{x \in X} \int_{\mu \in \mathcal{M}} P(x, \mu) \log \left[ \frac{P(x, \mu)}{p(x) P_{\mathcal{M}}(\mu)} \right] \quad D \mu d^{D} x \label{mutualinfo}
+\end{align}
+$$</p>
+<p>This <strong>information measure</strong> tells us how many bits (on average) are required to encode $x$ into $\mu$, or the necessary capacity of the channel needed to transmit the compressed data. Ideally, we want a manifold description ${\mathcal{M}, P_{\mathcal{M}} }$ that has low distortion $D(\mathcal{M}, P_{\mathcal{M}}, p)$ and good compression (or low $I(X, \mathcal{M})$), where the more bits we are willing to provide for the description of the data, the more detailed a manifold can be constructed. This is formalised in the concept of an <strong>optimal manifold</strong> &ndash; given a dataset $X$ and channel capacity $I$, a manifold description ${\mathcal{M}, P_{\mathcal{M}} }$ that minimises the distortion $D(\mathcal{M}, P_{\mathcal{M}}, p)$ and requires only information $I$ for representing an element of $X$ will be called an optimal manifold $\mathcal{M}(I,X)$.</p>
+<p>To find the optimal manifold, we must solve a constrained optimisation problem. For Langrange multiplier $\lambda$, consider the functional $\mathcal{F}(\mathcal{M}, P_{\mathcal{M}}) = D + \lambda I$. Then, for $d \le D$, let $\gamma(t): t \rightarrow \mathcal{M}$ map points in $t \in \mathbb{R}^{d}$ onto the manifold so that reparameterising $\mathcal{M}$ with $t$ gives</p>
+<p>$$
+\begin{align}
+D &amp;= \int_{x \in \mathbb{R}^{D}} \int_{t \in \mathbb{R}^{d}} p(x) P(t \mid x) (\mu \mid x) | x - \gamma(t) |^2 \quad d^{d} t d^{D} x \nonumber \newline
+I &amp;= \int_{x \in \mathbb{R}^{D}} \int_{t \in \mathbb{R}^{d}} p(x) P(t \mid x) \log \left[ \frac{P(t \mid x)}{P(t)} \right] \quad d^{d} t d^{D} x \nonumber \newline
+\mathcal{F}(\gamma(t), P(t \mid x)) &amp;= D + \lambda I
+\end{align}
+$$</p>
+<p>First order conditions stipulate that $\frac{\delta \mathcal{F}}{\delta \gamma(t)} = 0$ and $\frac{\delta \mathcal{F}}{\delta P(t \mid x)} = 0$, giving us the following set of self consistent equations</p>
+<p>$$
+\begin{align}
+P(t) &amp;= \int_{x \in \mathbb{R}^{D}} p(x) P(t \mid x) \quad d^{D} x \label{foc1} \newline
+\gamma(t) &amp;= \frac{1}{P(t)} \int_{x \in \mathbb{R}^{D}} x p(x) P(t \mid x) \quad d^{D} x \label{foc2} \newline
+P(t \mid x) &amp;= \frac{P(t)}{\Pi(x)} \exp \left( -\frac{1}{\lambda} |x - \gamma(t) |^2 \right) \label{foc3}
+\end{align}
+$$</p>
+<p>where $\Pi(x)$ is a normalising constant for $P(t \mid x)$.</p>
+<h2 id="a-blahutarimoto-algorithm">A Blahut–Arimoto algorithm</h2>
+<p>In practice, we do not have the complete density $p(x)$ and instead have a discrete number of samples. The density is thus approximated as $p(x) = \frac{1}{N} \sum_{i=1}^{N} \delta (x - x_i)$ where $N$ is the number of samples, $i$ is the sample label, and $x_i$ is the vector describing the $i^{th}$ sample. Similarly, instead of $t$ being a continuous variable, we use a discrete set $t \in {t_1, \dots, t_K }$ of $K$ points to model the manifold. Then $P(t \mid x)$ becomes $P_k(x_i)$, $\gamma(t)$ becomes $\gamma_k$, and $P(t)$ becomes $P_k$. Let $n$ be the iteration number, and $\alpha = 1, \dots, D$ be a coordinate index in $\mathbb{R}^{D}$. Then, instead of $\eqref{foc1}$, $\eqref{foc2}$ and $\eqref{foc3}$, we have the iterative scheme</p>
+<p>$$
+\begin{align}
+P_k^{(n)} &amp;= \frac{1}{N} \sum_{i=1}^{N} P_k^{(n)}(x_i) \label{alg1} \newline
+\gamma_{k, \alpha}^{(n)} &amp;= \frac{1}{P_k^{(n)}} \frac{1}{N} \sum_{i=1}^{N} x_{i,\alpha} P_{k}^{(n)} (x_i) \label{alg2} \newline
+P_{k}^{(n+1)}(x_i) &amp;= \frac{P_k^{(n)}}{\Pi^{(n)}(x_i)} \exp \left\{-\frac{1}{\lambda} | x_i - \gamma_k^{(n)} |^2 \right\} \label{alg3}
+\end{align}
+$$</p>
+<p>where $\gamma_k^{(0)}$ and $P_k^{(0)}(x_i)$ can be initialised by choosing $K$ points at random from the dataset, and letting $\gamma_k = x_{i, (k)}$ and $P_k^{(0)} = \frac{1}{K}$. The stopping criterion is $\max_{k} |\gamma_k^{(n)} - \gamma_k^{(n-1)}| &lt; \epsilon$, where $\epsilon$ determines the precision with which the manifold points are located. Note that we also require the information distortion cost $\lambda = -\frac{\delta D}{\delta I}$
+as a parameter in the above algorithm. That is, for a given value of $I$, we can find the manifold description $(\mathcal{M}, P(\mathcal{M} \mid X))$ by using the above algorithm to get arbitrarily close to the given $I$.</p>
+<h2 id="some-intuition">Some intuition</h2>
+<p>The Blahut-Arimoto algorithm in $\eqref{alg1}$, $\eqref{alg2}$ and $\eqref{alg3}$ produces a collection of $K$ manifold points, $\gamma_k \in \mathcal{M} \subset \mathbb{R}^{D}$, and a stochastic projection map $P_k(x_i)$. Consider a ball of radius $r$ centered at some point on the manifold, and we begin to grow the ball. Then, the number of points on the manifold that fall inside the ball will scale with $r^{d}$, where $d$ is the intrinsic dimensionality of the manifold. This will not necessarily be true for the points in the original dataset, since it will resemble the whole embedding space $\mathbb{R}^{D}$ locally. More precisely, for the points lying on the manifold, the <strong>correlation dimension</strong> remains constant, but the correlation dimension for the original dataset quickly approaches that of the embedding space as $r$ decreases.</p>
+<h2 id="more-is-not-always-better">More is not always better</h2>
+<p>The key idea in this paper is to offer a generalised alternative to finding low-dimensional manifolds in high-dimensional data by restricting the mutual information between points on the learned manifold and points in the original dataset. This is in contrast to most other methods that employ explicit regularisation or deliberately constrain the geometric features of the resulting manifold. Sections 5 and 6 of <a href="https://papers.nips.cc/paper/2399-optimal-manifold-representation-of-data-an-information-theoretic-approach.pdf">the paper</a> provide some examples of the algorithm in action and a more detailed discussion of its performance.</p>
+
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/ibp/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2020-01-01 17:10:50.637978 -0800 PST m=&#43;0.161285334">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>

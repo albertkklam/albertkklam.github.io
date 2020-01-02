@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>All You Can Eat &middot; verbose: 1</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="verbose: 1" />
+
+		
+		<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">verbose: 1</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/posts/">
+                
+                <span>Blog</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        Albert Lam
+        <br>
+        <span>on&nbsp;</span><time datetime="2019-06-24 00:00:00 &#43;0000 UTC">June 24, 2019</time>
+</div>
+		<h1 class="post-title">All You Can Eat</h1>
+<div class="post-line"></div>
+
+		
+
+		<h2 id="the-arxiv-book-club">The arXiv Book Club</h2>
+<p>A few friends and I started a reading group earlier this month since we're all hanging out in Chicago over the summer. This is the first of (hopefully) many posts related to various topics we cover over the next few months. Our entree (this post) summarises the theoretical results from the seminal paper on the Indian Buffet Process by <a href="http://www.jmlr.org/papers/volume12/griffiths11a/griffiths11a.pdf">Griffiths and Ghahramani (2011)</a>.</p>
+<h2 id="preliminaries">Preliminaries</h2>
+<p>For random variables $A$ and $B$, <strong>Bayes&rsquo; rule</strong> gives us</p>
+<p>$$
+\begin{align}
+P(B \mid A) &amp;= \frac{P(B \cap A)}{P(A)} \nonumber \newline
+&amp;= \frac{P(A \mid B) \cdot P(B)}{P(A)} \label{bayesrule}
+\end{align}
+$$</p>
+<p>Now, suppose we have some hypothetical distribution $X$ from which data can be drawn from, and some hypothetical distribution $\theta$ from which the parameters of $X$ can be drawn from. Then, a natural problem is to find the value(s) of $\theta$ that best explains the observed data from $X$. Applying Bayes&rsquo; rule from $\eqref{bayesrule}$ is one approach</p>
+<p>$$
+\begin{align}
+P(\theta \mid X) &amp;= \frac{P(X \mid \theta) \cdot P(\theta)}{P(X)} \nonumber \newline
+&amp;\propto P(X \mid \theta) \cdot P(\theta) \nonumber
+\end{align}
+$$</p>
+<p>Here, $P(\theta)$ is called the <strong>prior</strong> distribution of $\theta$, which represents the distribution of $\theta$ values before any data is observed, $P(X \mid \theta)$ is the <strong>likelihood</strong>, which represents how likely we are of observing the current instance of $X$ given the $\theta$ parameter values, and $P(X)$ is the likelihood marginalised over all possible $\theta$ values. Bayes&rsquo; rule tells us that we can update the prior of $\theta$ using observations from $X$ so that our belief in the value of $\theta$ reflects the information we currently have &ndash; we call this updated distribution $P(\theta \mid X)$ the <strong>posterior</strong> distribution of $\theta$.</p>
+<h2 id="motivating-infinite-mixture-models">Motivating infinite mixture models</h2>
+<p>We will consider a simple example to make some of these ideas more concrete. Suppose we are the owners of a supermarket and we are interested in better understanding the different types of customers that shop in our store. We have access to the purchasing history of each customer, including information such as which items they purchase, at what price they purchase them at, when they purchase those items, and how many they purchase at one time. We want to use this data to infer attributes of each customer that are naturally unknown, such as their price elasticity, whether they live by themselves or as part of a large family, and whether they are young or old. The intention is to use these attributes to improve store-level operations and ensure customer satisfaction remains high.</p>
+<p>This example is a classic unsupervised learning problem, where each customer represents an observation, their purchasing history can be summarized as observable features associated with each observation, and we want to make a prediction that classifies each observation into some unobservable customer-type category. In the literature, the hidden customer category is more generally referred to as a <strong>latent variable</strong> (or latent feature) in such models, and each category itself is referred to as a <strong>class</strong> of that latent variable.</p>
+<p>One key problem here is determining a reasonable form to this latent structure, such as the number of possible customer types, and is often resolved by assuming there is a unique, finite number of classes that correctly characterises what is observed. Alternatively, we can instead assume that the correct representation of the latent structure is potentially unbounded, or &ldquo;infinite&rdquo; in the number of customer types &ndash; although this is in actual fact bounded by the number of unique customers we observe. The benefit here is that there is no need to define an additional hyperparameter for how many ground-truth classes should exist in our sample, which without first analysing the data seems rather contrived. This family of models is central to the study of <strong>nonparametric Bayesian statistics</strong>, where nonparametric refers to the fact that these models have potentially an infinite number of parameters.</p>
+<p>The Dirichlet process mixture model (DP) is one such example in this family, where each customer is assigned to one customer-type category, and each category is associated with a distribution over some set of observable properties, such as average price per item or average elapsed time since last purchase. While the Dirichlet process is nonparametric, it is somewhat unnatural to think of customers as being solely associated with one class from the set of all possible classes. Rather, it would seem more appropriate that our customers are multi-faceted and their observed behaviour is a result from multiple causes. The <strong>Indian buffet process (IBP)</strong> is a generative approach that is primarily motivated by the DP model, but considers customers (observations) as combinations of (possessing) causes or drivers (features) that are potentially infinite in number.</p>
+<h2 id="extending-finite-mixture-models">Extending finite mixture models&hellip;</h2>
+<p>We begin by first reviewing the construction of finite mixture models, which will motivate the construction of infinite mixture models. Suppose we have $N$ observations $x_1, \dots, x_N$, where each $x_i \in \mathbb{R}^{D}$ is a vector of $D$ observable properties for $i = 1, \dots, N$. Then, let $X = \left[ x_1^\intercal, \dots, x_N^\intercal \right]^\intercal$ be the $N \times D$ data matrix, and let the vector $c = \left[ c_1, \dots, c_N \right]^\intercal \in {1, \dots, K}^{N}$ indicate the class assignments of the $N$ observations. Following the definitions from earlier, $P(c)$ is the <strong>assignment prior</strong> and specifies the number of classes and their relative probabilities, and $P(X \mid c)$ is the likelihood which determines how classes relate to the observable properties in $X$. Assuming that the assignment of an observation to a class is independent of the assignment of other observations, if there are $K$ classes and $\theta = \left[\theta_1, \dots, \theta_K \right]^\intercal$ is the vector of parameters for $c$, we can write the distribution of classes over $\theta$ as</p>
+<p>$$
+\begin{align}
+P(c \mid \theta) &amp;= \prod_{i=1}^{N} P(c_i = k \mid \theta) \nonumber \newline
+&amp;= \prod_{i=1}^{N} \theta_{k} \label{thetadist}
+\end{align}
+$$</p>
+<p>where $\theta_{k}$ can be interpreted as the probability of assigning an observation to class $k$ given $\theta$, and it follows that $c \mid \theta \sim Multinomial(N, \theta_1, \dots, \theta_K)$. Then, using $\eqref{thetadist}$, we can write the likelihood as</p>
+<p>$$
+\begin{align}
+P(X \mid c) &amp;= \prod_{i=1}^{N} P(x_i \mid c_i, \theta) \nonumber \newline
+&amp;= \prod_{i=1}^{N} \sum_{k=1}^{K} P(x_i \mid c_i = k) \cdot P(c_i = k \mid \theta) \nonumber \newline
+&amp;= \prod_{i=1}^{N} \sum_{k=1}^{K} P(x_i \mid c_i = k) \cdot \theta_{k} \nonumber
+\end{align}
+$$</p>
+<p>The likelihood is thus a finite mixture model with $K$ classes and weights $\theta_k$ that themselves can be treated as parameters that need to be estimated. One common choice is to let $\theta \mid \alpha \sim Dirichlet(K, \alpha_1, \dots, \alpha_K)$, and setting $\alpha_1 = \alpha_2 = \dots = \alpha_K = \frac{\alpha}{K}$. The <strong>complete finite mixture model</strong> is then</p>
+<p>$$
+\begin{align}
+\theta &amp;\mid \alpha \sim Dirichlet \left(K, \frac{\alpha}{K}, \dots, \frac{\alpha}{K} \right) \nonumber \newline
+c &amp;\mid \theta \sim Multinomial(N, \theta_1, \dots, \theta_K) \nonumber
+\end{align}
+$$</p>
+<p>Marginalising $\theta$, we can express the assignment prior as</p>
+<p>$$
+\begin{align}
+P(c) &amp;= \int_{\Theta} \prod_{i=1}^{N} P(c_i \mid \theta) \cdot P(\theta) \quad d\theta \label{thetamarg1} \newline
+&amp;= \int_{\Theta} \frac{1}{D\left(\frac{\alpha}{K}, \dots, \frac{\alpha}{K} \right)} \prod_{k=1}^{K} \theta_{k}^{m_k + \frac{\alpha}{K} - 1} \quad d\theta \label{thetamarg2} \newline
+&amp;= \frac{D\left(m_1 + \frac{\alpha}{K}, \dots, m_K + \frac{\alpha}{K} \right)}{D\left(\frac{\alpha}{K}, \dots, \frac{\alpha}{K} \right)} \label{thetamarg3} \newline
+&amp;= \frac{\prod_{k=1}^{K} \Gamma\left(m_k + \frac{\alpha}{K}\right)}{\left[\Gamma \left(\frac{\alpha}{K} \right)\right]^{K}} \cdot \frac{\Gamma(\alpha)}{\Gamma(N + \alpha)} \label{thetamarg4}
+\end{align}
+$$</p>
+<p>where $m_k = \sum_{i=1}^{N} \delta(c_i = k)$ is the number of observations assigned to class $k$, and $D\left(\alpha_1, \dots, \alpha_K \right) = \frac{\prod_{k=1}^{K} \Gamma(\alpha_k)}{\Gamma(\sum_{k=1}^{K} \alpha_k)}$ is the normalising constant in a Dirichlet distribution with parameters $\alpha_1, \dots, \alpha_K$. Here, $\eqref{thetamarg1}$ follows from the law of total probability, $\eqref{thetamarg2}$ follows from combining the density functions of the Dirichlet and multinomial distributions, and $\eqref{thetamarg3}$ and $\eqref{thetamarg4}$ follow from simplifying the resulting expression.</p>
+<h2 id="-to-infinity">&hellip; to infinity</h2>
+<p>In order to replicate the same derivations for the infinite case, we make use of the recursive identity of the gamma function</p>
+<p>$$
+\begin{align}
+\Gamma(x) &amp;= (x-1) \cdot \Gamma(x-1) \label{gammarec}
+\end{align}
+$$</p>
+<p>Applying $\eqref{gammarec}$ to $\eqref{thetamarg4}$, we can write the assignment prior as</p>
+<p>$$
+\begin{align}
+P(c) &amp;= \frac{\prod_{k=1}^{K} \prod_{j=1}^{m_k - 1} \left(j + \frac{\alpha}{K} \right) \cdot \Gamma \left(\frac{\alpha}{K} + 1\right)}{\left[\Gamma \left(\frac{\alpha}{K} \right)\right]^{K}} \cdot \frac{\Gamma(\alpha)}{\Gamma(N + \alpha)} \nonumber \newline
+&amp;= \frac{\left[\Gamma \left(\frac{\alpha}{K} + 1\right)\right]^{K_+}}{\left[\Gamma \left(\frac{\alpha}{K} \right)\right]^{K}} \left( \prod_{k=1}^{K_+} \prod_{j=1}^{m_k - 1} \left(j + \frac{\alpha}{K} \right) \right) \frac{\Gamma(\alpha)}{\Gamma(N + \alpha)} \nonumber \newline
+&amp;= \left(\frac{\alpha}{K} \right)^{K_+} \left(\prod_{k=1}^{K_+} \prod_{j=1}^{m_k - 1} \left(j + \frac{\alpha}{K} \right) \right) \frac{\Gamma(\alpha)}{\Gamma(N + \alpha)} \label{assignprior}
+\end{align}
+$$</p>
+<p>where $K_+$ is the number of classes for which $m_k &gt; 0$, and the indices of $m_k$ are reordered so that $m_k &gt; 0$ for all $k &lt; K_+$. Note that this does not affect the assignment prior, which is invariant to permutations of the observation order &ndash; this property is known as <strong>exchangeability</strong>. Now, observe that there are $K^{N}$ possible values for $c$, which diverges as $K \rightarrow \infty$, and thus the probability of observing any single instance assignment vector goes to 0. This motivates the consideration of modelling the distribution over <strong>equivalence classes</strong>, rather than the actual assignment vectors themselves. We explore these concepts next.</p>
+<p>A <strong>partition</strong> is a division of a set of $N$ observations into subsets, such that each observation only belongs to one subset and the ordering of the subsets do not matter. Thus, two assignment vectors that result in the same division of observations correspond to the same partition. A partition therefore defines an equivalence class $[c]$ for assignment vectors $c$, where two assignment vectors belong to the same equivalence class if they correspond to the same partition. Suppose we partition $N$ observations into $K_+$ subsets, and we have $K = K_0 + K_+$ class labels that can be applied to these subsets. Then, there are $\binom{K}{K_+} \times K_+! = \frac{K!}{K_0!}$ assignment vectors that belong to the equivalence class defined by that partition, and we can define a probability <strong>distribution over partitions</strong> by summing over all assignment vectors that belong to that class. Using the results from $\eqref{assignprior}$ and taking the limit gives us</p>
+<p>$$
+\begin{align}
+P([c]) &amp;= \sum_{c \in [c]} P(c) \nonumber \newline
+&amp;= \frac{K!}{K_0!} \left(\frac{\alpha}{K} \right)^{K_+} \left(\prod_{k=1}^{K_+} \prod_{j=1}^{m_k - 1} \left(j + \frac{\alpha}{K} \right) \right)  \frac{\Gamma(\alpha)}{\Gamma(N + \alpha)} \nonumber \newline
+\lim_{K \rightarrow \infty} P([c]) &amp;= \alpha^{K_+} \left(\prod_{k=1}^{K_+} (m_k - 1)! \right) \frac{\Gamma(\alpha)}{\Gamma(N + \alpha)} \label{partprior} \newline
+\end{align}
+$$</p>
+<p>Thus, we have a valid distribution over partitions, and thus over equivalence classes of assignment vectors, which provides an assignment prior for an infinite mixture model. Like the assignment prior from the finite mixture model, the distribution of the assignment prior here satisfies exchangeability.</p>
+<h2 id="arbitrarily-large-tables">Arbitrarily large tables</h2>
+<p>A <strong>Chinese restaurant process (CRP)</strong> is an analogous formulation of our &ldquo;distribution over partitions&rdquo; described above. Imagine a restaurant with an infinite number of tables, and an infinite number of chairs at each table. As customers enter the restaurant, they choose an already occupied table with probability proportional to the number of people already at the table, or chooses the next vacant table with probability proportional to parameter $\alpha$. It follows that customer $c_i$ would be assigned to table $k$ with probability</p>
+<p>$$
+\begin{align}
+P(c_i = k \mid c_1, \dots, c_{i-1}) &amp;= \begin{cases}
+\frac{m_k}{i - 1 + \alpha} \quad &amp;\text{if} \quad k &lt; K_+ \newline
+\frac{\alpha}{i - 1 + \alpha} \quad &amp;\text{if} \quad k = K + 1
+\end{cases}
+\nonumber
+\end{align}
+$$</p>
+<p>The assignment of all customers (observations) to tables (classes) via this process produces a distribution over partitions of the same form as $\eqref{partprior}$. The elegance of the CRP is that it provides an intuitive way for generating assignment priors for an infinite mixture model.</p>
+<h2 id="connections-to-latent-feature-models">Connections to latent feature models</h2>
+<p>We now have the tools for representing observations in terms of infinitely many latent features. In a <strong>latent feature model</strong>, each observation $c_i$ is represented by a vector of latent feature values $f_i \in \mathbb{R}^{K}$, and the observable properties $x_i \in \mathbb{R}^{D}$ are generated from a distribution dependent on the $f_i$ vector. Let $F = [f_1^\intercal, \dots, f_N^\intercal]^\intercal$ be the $N \times K$ matrix of latent features for all $N$ observations, with prior $P(F)$ and likelihood $P(X \mid F)$. Then, $F$ can be expressed as the elementwise (Hadamard) product of two matrices $Z$ and $V$, where $Z \in \mathbb{R}^{N \times K}$ is a <strong>binary matrix</strong> for whether observation $i$ has feature $k$, and $V \in \mathbb{R}^{N \times K}$ is a <strong>matrix of feature values</strong> for each observation. The prior on $F$ can then be defined by specifying priors on $Z$ and $V$, with $p(F) = p(Z) \cdot p(V)$. If $Z$ is sparse, we can define a prior for infinite latent feature models by defining a distribution over infinite binary matrices. Our analysis suggests that such a distribution should satisfy exchangeability, and this can be achieved by starting with a model that assumes a finite number of features, and then taking the limit.</p>
+<h2 id="from-a-la-carte">From a la carte&hellip;</h2>
+<p>We begin in the same way as in our finite dimensional mixture model formulation by considering a finite latent feature model. Suppose we have $N$ observations and $K$ features, and the possession of feature $k$ by observation $i$ is indicated by a binary variable $z_{i,k}$, such that the values of $z_{i,k}$ form a $N \times K$ binary matrix $Z$. Assume observation $i$ possesses feature $k$ independently with probability $\pi_k$, where $0 \le \pi_k \le 1$. Then, let $\pi = [\pi_1, \dots, \pi_K]$ and we can write the likelihood as</p>
+<p>$$
+\begin{align}
+P(Z \mid \pi) &amp;= \prod_{k=1}^{K} \prod_{i=1}^{N} P(z_{i,k} \mid \pi_k) \nonumber \newline
+&amp;= \prod_{k=1}^{K} \pi_k^{m_k} (1 - \pi_k)^{N - m_k} \nonumber
+\end{align}
+$$</p>
+<p>where $m_k = \sum_{i=1}^{N} z_{i,k}$ is the number of observations possessing feature $k$. Note that this is a Bernoulli likelihood with parameter $\pi_k$, and for the same reasons as we chose a Dirichlet distribution as the assignment prior in our latent class model, here we choose a <strong>feature prior</strong> that is beta distributed with parameters $\frac{\alpha}{K}$ and $1$</p>
+<p>$$
+\begin{align}
+P(\pi_k) &amp;= \frac{\pi_k^{\frac{\alpha}{K}-1}}{B \left(\frac{\alpha}{K}, 1 \right)} \nonumber \newline
+&amp;= \frac{\alpha}{K} \cdot \pi_k^{\frac{\alpha}{K}-1} \nonumber
+\end{align}
+$$</p>
+<p>where $B(r,s) = \frac{\Gamma(r) \Gamma(s)}{\Gamma(r+s)}$ is the beta function. The <strong>complete finite feature model</strong> is then</p>
+<p>$$
+\begin{align}
+\pi_k \mid \alpha &amp;\sim Beta \left( \frac{\alpha}{K}, 1 \right) \nonumber \newline
+z_{i,k} \mid \pi_k &amp;\sim Bernoulli(\pi_k) \nonumber
+\end{align}
+$$</p>
+<p>and the marginal distribution of $Z$ is</p>
+<p>$$
+\begin{align}
+P(Z) &amp;= \prod_{k=1}^{K} \int_{\Pi} P(Z \mid \pi_k) P(\pi_k) \quad d\pi_k \label{zmarg1} \newline
+&amp;= \prod_{k=1}^{K} \int_{\Pi} \left(\prod_{i=1}^{N} P(z_{i,k} \mid \pi_k) \right) P(\pi_k) \quad d\pi_k \label{zmarg2} \newline
+&amp;= \prod_{k=1}^{K} \frac{B(m_k + \frac{\alpha}{K}, N - m_k + 1)}{B \left( \frac{\alpha}{K}, 1 \right)} \label{zmarg3} \newline
+&amp;= \frac{\alpha}{K} \cdot \prod_{k=1}^{K} \frac{\Gamma \left(m_k + \frac{\alpha}{K} \right) \Gamma(N - m_k + 1)}{\Gamma \left( N + 1 + \frac{\alpha}{K} \right)} \label{zmarg4}
+\end{align}
+$$</p>
+<p>Here, $\eqref{zmarg1}$ follows from the law of total probability, $\eqref{zmarg2}$ follows from independence of $z_{i,k} \mid \pi_k$, $\eqref{zmarg3}$ follows from combining the densities of beta and binomial distributions, and $\eqref{zmarg4}$ follows from the definition of the beta function. Note that $P(Z)$ satisfies exchangeability as desired.</p>
+<h2 id="-to-all-you-can-eat">&hellip; to all you can eat</h2>
+<p>The technical details of equivalence classes for binary matrices is omitted here for brevity &ndash; feel free to refer to section 4.2 of <a href="http://www.jmlr.org/papers/volume12/griffiths11a/griffiths11a.pdf">the paper</a> if you are interested. Instead, we simply define $[Z]$ as the equivalence class of binary matrix $Z$ and we can write</p>
+<p>$$
+\begin{align}
+P([Z]) &amp;= \sum_{Z \in [Z]} P(Z) \nonumber \newline
+&amp;= \frac{K!}{\prod_{h=0}^{2^{N}-1} K_{h}!} \prod_{k=1}^{K} \frac{\frac{\alpha}{K} \Gamma(m_k + \frac{\alpha}{K}) \Gamma(N - m_k + 1) }{\Gamma(N+1+\frac{\alpha}{K})} \label{equivZ1}
+\end{align}
+$$</p>
+<p>Note that $\frac{K!}{\prod_{h=0}^{2^N-1} K_h!}$ is the cardinality of $[Z]$, where $K_h$ is the count of the number of columns with full <strong>history</strong> $h$ (see section 4.2 of the paper for details). Reordering the columns of $Z$ such that $m_k &gt; 0$ if $k \le K_+$, and $m_k = 0$ otherwise, we can write the product in $\eqref{equivZ1}$ as</p>
+<p>$$
+\begin{align}
+&amp;\prod_{k=1}^{K} \frac{\frac{\alpha}{K} \Gamma(m_k + \frac{\alpha}{K}) \Gamma(N - m_k + 1) }{\Gamma(N+1+\frac{\alpha}{K})} \nonumber \newline
+= \quad &amp; \left(\frac{\frac{\alpha}{K} \Gamma \left(\frac{\alpha}{K} \right) \Gamma(N+1)}{\Gamma \left( N + 1 + \frac{\alpha}{K} \right)} \right)^{K - K_+} \prod_{k=1}^{K_+} \frac{ \frac{\alpha}{K} \Gamma \left(m_k +\frac{\alpha}{K}\right) \Gamma(N - m_k + 1) }{\Gamma \left( N+1+\frac{\alpha}{K} \right)} \label{equivZ2} \newline
+= \quad &amp; \left(\frac{\frac{\alpha}{K} \Gamma \left(\frac{\alpha}{K} \right) \Gamma(N+1)}{\Gamma \left( N + 1 + \frac{\alpha}{K} \right)} \right)^{K} \prod_{k=1}^{K_+} \frac{\Gamma \left(m_k +\frac{\alpha}{K}\right) \Gamma(N - m_k + 1) }{\Gamma \left( \frac{\alpha}{K} \right) \Gamma \left( N + 1 \right)} \label{equivZ3} \newline
+= \quad &amp; \left( \frac{N!}{\prod_{j=1}^{N} \left( j + \frac{\alpha}{K} \right) } \right)^{K} \left(\frac{\alpha}{K} \right)^{K_+} \prod_{k=1}^{K_+} \frac{(N - m_k)! \prod_{j=1}^{m_k-1} \left(j + \frac{\alpha}{K} \right)}{N!} \label{equivZ4}
+\end{align}
+$$</p>
+<p>Here, $\eqref{equivZ2}$ follows from applying the definition of the column reordering, $\eqref{equivZ3}$ follows from reordering the terms in the product, and $\eqref{equivZ4}$ follows from applying the recursive identity of the gamma function from $\eqref{gammarec}$. Substituting $\eqref{equivZ4}$ into $\eqref{equivZ1}$, and taking the limit gives us</p>
+<p>$$
+\begin{align}
+&amp;\lim_{K \rightarrow \infty} P([Z]) \nonumber \newline
+= \quad &amp; \frac{\alpha^{K_+}}{\prod_{h=1}^{2^{N}-1} K_{h}!} \cdot \exp \left\{-\alpha \sum_{j=1}^{N} \frac{1}{j} \right\} \cdot \prod_{k=1}^{K_+} \frac{(N - m_k)! (m_k - 1)!}{N!} \label{equivZ5}
+\end{align}
+$$</p>
+<p>Again, this distribution satisfies exchangeability since neither the number of identical columns nor the column sums are affected by the ordering of observations.</p>
+<h2 id="arbitrarily-large-plates">Arbitrarily large plates</h2>
+<p>We are now ready to define the IBP, in much the same way as defined the CRP. Suppose we have $N$ customers enter a restaurant sequentially, and each customer encounters a buffer consisting of infinitely many dishes arranged in a line. The first customer starts at the beginning of the line and takes a serving from each dish, stopping after a $Poisson(\alpha)$ number of dishes are on their plate. The $i^{th}$ customer then moves along the buffet line and samples dishes according to their popularity $\frac{m_k}{i}$ where $m_k$ is the number of previous customers who sampled the dish. At the end of the line of previously sampled dishes, the $i^{th}$ customer samples $Poisson \left( \frac{\alpha}{i} \right)$ new dishes. We can record which customers sample which dishes using a binary matrix $Z$ with $N$ rows and infinitely many columns, where the entry in position $(i,k)$ is equal to $1$ if customer $i$ sampled dish $k$. Let $K_1^{(i)}$ indicate the number of newly sampled dishes by the $i^{th}$ customer, and the probability of any particular binary matrix being produced by this process is</p>
+<p>$$
+\begin{align}
+P(Z) &amp;= \frac{\alpha^{K_+}}{\prod_{i=1}^{N} K_1^{(i)}! } \cdot \exp \left\{-\alpha \sum_{j=1}^{N} \frac{1}{j} \right\} \cdot \prod_{k=1}^{K_+} \frac{(N - m_k)! (m_k - 1)!}{N!} \nonumber
+\end{align}
+$$</p>
+<p>and $\frac{\prod_{i=1}^{N} K_1!}{\prod_{h=0}^{2^{N}-1} K_{h}!}$ matrices generated by this process map to the same equivalence class, which gives us the exchangeable distribution $P([Z])$ from $\eqref{equivZ5}$. It is possible to directly produce the equivalence class distribution by considering the dishes with history $h$ &ndash; in the exchangeable IBP, the $i^{th}$ customer instead makes a single decision for each set of dishes with the same history. If there are $K_h$ dishes with history $h$ and $m_h$ previous customers have sampled each of these dishes, then the $i^{th}$ customer samples a $Binomial \left(\frac{m_h}{i}, K_h \right)$ number of those dishes before sampling $Poisson \left(\frac{\alpha}{i} \right)$ new dishes.</p>
+<h2 id="tips-are-welcome">Tips are welcome!</h2>
+<p><a href="http://www.jmlr.org/papers/volume12/griffiths11a/griffiths11a.pdf">Griffiths and Ghahramani (2011)</a> goes into further detail with examples (section 5), applications of the IBP approach (section 6), and concludes with a discussion on extensions to the IBP (section 7) and suggestions for future work (section 8). This post covers most of sections 1 through 4, with the exception of the derivation of Gibbs samplers for both the CRP and IBP (see sections 2.4 and 4.7 of the paper if you are interested). Thank you for bearing with all the food-related puns.</p>
+
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/leastsquares/" class="left arrow">&#8592;</a>
+		<a href="/posts/optmnfld/" class="right arrow">&#8594;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2020-01-01 17:10:50.643239 -0800 PST m=&#43;0.166546574">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>
