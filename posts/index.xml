@@ -2,48 +2,48 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on verbose: 1</title>
-    <link>http://example.org/posts/</link>
+    <link>https://albertkklam.github.io/posts/</link>
     <description>Recent content in Posts on verbose: 1</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 10 Jul 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://example.org/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://albertkklam.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>The Beauty in Simplicity</title>
-      <link>http://example.org/posts/optmnfld/</link>
+      <link>https://albertkklam.github.io/posts/optmnfld/</link>
       <pubDate>Wed, 10 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/posts/optmnfld/</guid>
+      <guid>https://albertkklam.github.io/posts/optmnfld/</guid>
       <description>When less-is-more meets data</description>
     </item>
     
     <item>
       <title>All You Can Eat</title>
-      <link>http://example.org/posts/ibp/</link>
+      <link>https://albertkklam.github.io/posts/ibp/</link>
       <pubDate>Mon, 24 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/posts/ibp/</guid>
+      <guid>https://albertkklam.github.io/posts/ibp/</guid>
       <description>For Bayesians</description>
     </item>
     
     <item>
       <title>Notes on Least Squares</title>
-      <link>http://example.org/posts/leastsquares/</link>
+      <link>https://albertkklam.github.io/posts/leastsquares/</link>
       <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/posts/leastsquares/</guid>
+      <guid>https://albertkklam.github.io/posts/leastsquares/</guid>
       <description>Everything is linear&amp;hellip;(sort of&amp;hellip; (in sufficiently high dimensional space))</description>
     </item>
     
     <item>
       <title>Slack Notifications for your Spark Workflow</title>
-      <link>http://example.org/posts/slackspark/</link>
+      <link>https://albertkklam.github.io/posts/slackspark/</link>
       <pubDate>Tue, 16 May 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/posts/slackspark/</guid>
+      <guid>https://albertkklam.github.io/posts/slackspark/</guid>
       <description>Notifications to your Slack channel from Spark</description>
     </item>
     
