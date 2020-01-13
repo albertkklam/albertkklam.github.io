@@ -2,39 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Statistics on verbose: 1</title>
-    <link>https://albertkklam.github.io/tags/statistics/</link>
+    <link>/tags/statistics/</link>
     <description>Recent content in Statistics on verbose: 1</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 10 Jul 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://albertkklam.github.io/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>The Beauty in Simplicity</title>
-      <link>https://albertkklam.github.io/posts/optmnfld/</link>
+      <link>/posts/optmnfld/</link>
       <pubDate>Wed, 10 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://albertkklam.github.io/posts/optmnfld/</guid>
+      <guid>/posts/optmnfld/</guid>
       <description>When less-is-more meets data</description>
     </item>
     
     <item>
       <title>All You Can Eat</title>
-      <link>https://albertkklam.github.io/posts/ibp/</link>
+      <link>/posts/ibp/</link>
       <pubDate>Mon, 24 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://albertkklam.github.io/posts/ibp/</guid>
+      <guid>/posts/ibp/</guid>
       <description>For Bayesians</description>
     </item>
     
     <item>
       <title>Notes on Least Squares</title>
-      <link>https://albertkklam.github.io/posts/leastsquares/</link>
+      <link>/posts/leastsquares/</link>
       <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://albertkklam.github.io/posts/leastsquares/</guid>
+      <guid>/posts/leastsquares/</guid>
       <description>Everything is linear&amp;hellip;(sort of&amp;hellip; (in sufficiently high dimensional space))</description>
     </item>
     

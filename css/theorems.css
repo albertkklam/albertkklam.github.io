@@ -1,0 +1,25 @@
+.theorem {
+display: block;
+font-style: italic;
+}
+.theorem:before {
+content: "Theorem. ";
+font-weight: bold;
+font-style: normal;
+}
+.theorem[text]:before {
+content: "Theorem (" attr(text) ") ";
+}
+
+.lemma {
+display: block;
+font-style: italic;
+}
+.lemma:before {
+content: "Theorem. ";
+font-weight: bold;
+font-style: normal;
+}
+.lemma[text]:before {
+content: "Lemma (" attr(text) ") ";
+}
