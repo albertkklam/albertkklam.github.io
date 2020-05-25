@@ -94,7 +94,7 @@
 		
 
 		<h2 id="sometimes-it-helps-to-have-the-math-in-front-of-you">Sometimes it helps to have the math in front of you</h2>
-<p>Pretty much all the courses in statistics I took this quarter emphasised mathematical intuition over raw application and manipulation of mathematics, which is quite different to the courses I've taken in the past. The point was that with enough understanding of the underlying principles, it is possible to make conclusions without having to explicitly prove a result. Nevertheless, sometimes it helps to have the math in front of you &ndash; on one hand, it reinforces the ideas you are learning about, but also, you may not be convinced of a result unless you can also write it down.</p>
+<p>Pretty much all the courses in statistics I took this quarter emphasised mathematical intuition over raw application and manipulation of mathematics, which is quite different to the courses I&rsquo;ve taken in the past. The point was that with enough understanding of the underlying principles, it is possible to make conclusions without having to explicitly prove a result. Nevertheless, sometimes it helps to have the math in front of you &ndash; on one hand, it reinforces the ideas you are learning about, but also, you may not be convinced of a result unless you can also write it down.</p>
 <p>Here, we will look into some of the foundational results of the linear least squares model. Some parts will have less detail than others, but hopefully the contents that we end up covering will be sufficient as a standalone post for those that already have some familiarity with the topic.</p>
 <h2 id="preliminaries">Preliminaries</h2>
 <p>Let $Y \in \mathbb{R}^{n}$ be the response to a design matrix $X \in \mathbb{R}^{n \times p}$, where $n$ is the number of observations in the given dataset, and $p$ is the number of covariates to the response. Our linear model is then of the form</p>
@@ -155,8 +155,8 @@ $$</p>
 &amp;= X_i (X^{T}X)^{-1} X^{T} Y \label{lseqnrowfull}
 \end{align}
 $$</p>
-<h2 id="whats-random-and-what-isnt">What's random and what isn't</h2>
-<p>It's a good idea to revisit which quantities are random, and which are not, before we go into the properties of the least squares solution. Recall that $X$ is a fixed and known quantity, and $\beta$ is a fixed but unknown quantity. Thus, it follows that</p>
+<h2 id="whats-random-and-what-isnt">What&rsquo;s random and what isn&rsquo;t</h2>
+<p>It&rsquo;s a good idea to revisit which quantities are random, and which are not, before we go into the properties of the least squares solution. Recall that $X$ is a fixed and known quantity, and $\beta$ is a fixed but unknown quantity. Thus, it follows that</p>
 <p>$$
 \begin{align}
 \mathbb{E}[X] &amp;= X \label{ex} \newline
@@ -176,7 +176,7 @@ Var(Y) &amp;= Var(X \beta + \epsilon) \nonumber \newline
 \end{align}
 $$</p>
 <p>The notation is a bit liberal here. In particular, note that the expectation of $\epsilon$ and the variance of $\epsilon$ are actually operations on each entry of $\epsilon$. More precisely, the expectation of $\epsilon$ is a zero vector of length $n$, and the variance of $\epsilon$ is a covariance matrix $\Sigma = \sigma^2 \cdot I$ of size $n \times n$ with diagonal entries equal to $\sigma^2$ and zero everywhere else. We can also see that the variance in $Y$ arises purely from $\epsilon$, which is a random and unknown quantity. This is somewhat unexpected, since $Y$ is a known and fixed quantity to us, but one way to reason with this is that although $Y$ is fixed, it also has some component of randomness that is outside of our linear model.</p>
-<p>Let's turn our attention to the $\hat{\beta}$ and $\hat{Y}$ estimates. $\eqref{lseqn}$ tells us that $\hat{Y}$ depends on $\hat{\beta}$, and $\eqref{lseqnfull}$ tells us that $\hat{\beta}$ depends on $Y$. It follows that $\hat{Y}$ and $\hat{\beta}$ are random quantities, so we will look at the expectations and variances of these next.</p>
+<p>Let&rsquo;s turn our attention to the $\hat{\beta}$ and $\hat{Y}$ estimates. $\eqref{lseqn}$ tells us that $\hat{Y}$ depends on $\hat{\beta}$, and $\eqref{lseqnfull}$ tells us that $\hat{\beta}$ depends on $Y$. It follows that $\hat{Y}$ and $\hat{\beta}$ are random quantities, so we will look at the expectations and variances of these next.</p>
 <h2 id="quality-of-least-squares-estimates">Quality of least squares estimates</h2>
 <p>The estimates $\hat{\beta}$ and $\hat{Y}$ are important because these results reflect the quality of our linear model. Using $\eqref{lssol}$, $\eqref{ex}$, and $\eqref{ey}$, we have</p>
 <p>$$
@@ -205,7 +205,7 @@ $$</p>
 <p>Observe that the variances of $\hat{\beta}$ and $\hat{Y}$ reveal a number of interesting properties regarding linear models:</p>
 <ul>
 <li>The variances of both our least squares solution and our fitted response are positively associated with $\sigma^2$. That is, if $\sigma^2$ is large, the variances are also large. Intuitively, if the variance of our noise variables are large, $Y$ has a larger component of randomness, and our ability to precisely estimate the underlying $\beta$ coefficients become more difficult &ndash; imagine a scenario where we had zero noise (or noise with zero variance) so that our response could be perfectly explained by $X \beta$; here $\hat{\beta}$ would equal $\beta$, and as we introduce increasingly larger non-constant noise into our model, our ability to estimate $\beta$ deteriorates. It follows that our fitted response values $\hat{Y}$ suffer from this increased variability in $\hat{\beta}$</li>
-<li>The variances are inversely associated with $X^{T} X$. It's worth looking at $X^{T} X$ more closely here. Firstly, recall that $X \in \mathbb{R}^{n \times p}$, and thus $X^{T} X \in \mathbb{R}^{p \times p}$. Now, imagine we have a fixed $X$ and $X^{T} X$ of size $n \times p$ and $p \times p$ respectively. Consider the scenario where a new covariate is added to $X$ so that our new $\tilde{X}$ is of size $n \times (p+1)$, and $\tilde{X}^{T} \tilde{X}$ is of size $(p+1) \times (p+1)$. Then, let $\tilde{\beta}$ be the least squares solution when $\tilde{X}$ is the design matrix. One result you should convince yourself of is that the variance of $\tilde{\beta}$ is (almost always) larger than the variance of $\hat{\beta}$. That is, the more covariates that are added to $X$, the more variance we can expect in our least squares solution. We will skip the technical details, but the underlying principles that make this result true relate to positive semi-definite orderings, and the fact that we can show $(\tilde{X}^{T}\tilde{X})^{-1} - (X^{T}X)^{-1}$ is a positive semi-definite matrix. Intuitively, every time we add a covariate to the design matrix, we increase the chances of getting a more complex least squares solution, and more complex models tend to have higher variances than simpler ones</li>
+<li>The variances are inversely associated with $X^{T} X$. It&rsquo;s worth looking at $X^{T} X$ more closely here. Firstly, recall that $X \in \mathbb{R}^{n \times p}$, and thus $X^{T} X \in \mathbb{R}^{p \times p}$. Now, imagine we have a fixed $X$ and $X^{T} X$ of size $n \times p$ and $p \times p$ respectively. Consider the scenario where a new covariate is added to $X$ so that our new $\tilde{X}$ is of size $n \times (p+1)$, and $\tilde{X}^{T} \tilde{X}$ is of size $(p+1) \times (p+1)$. Then, let $\tilde{\beta}$ be the least squares solution when $\tilde{X}$ is the design matrix. One result you should convince yourself of is that the variance of $\tilde{\beta}$ is (almost always) larger than the variance of $\hat{\beta}$. That is, the more covariates that are added to $X$, the more variance we can expect in our least squares solution. We will skip the technical details, but the underlying principles that make this result true relate to positive semi-definite orderings, and the fact that we can show $(\tilde{X}^{T}\tilde{X})^{-1} - (X^{T}X)^{-1}$ is a positive semi-definite matrix. Intuitively, every time we add a covariate to the design matrix, we increase the chances of getting a more complex least squares solution, and more complex models tend to have higher variances than simpler ones</li>
 </ul>
 <p>The quantity we really want to understand though is not actually the least squares solution or its implied fitted response, but rather the difference between the fitted response and the true response $Y$. This is called the vector of residuals $\hat{\epsilon} \in \mathbb{R}^{n}$ of the model, and is formalised as</p>
 <p>$$
@@ -215,7 +215,7 @@ $$</p>
 \end{align}
 $$</p>
 <h2 id="analysis-of-residuals">Analysis of residuals</h2>
-<p>Recall that $\epsilon$ is the difference between $Y$ and $X \beta$, so another way of interpreting $\epsilon$ is that it is the unobserved error in the linear model. Using $\hat{\epsilon}$ to denote the &ldquo;error&rdquo; between $Y$ and $X \hat{\beta}$ then seems quite natural. Let's look at the expectation and variance of $\hat{\epsilon}$. Then, using $\eqref{vary}$, $\eqref{ehatbeta}$, $\eqref{ehaty}$, and $\eqref{reseqn}$, we have</p>
+<p>Recall that $\epsilon$ is the difference between $Y$ and $X \beta$, so another way of interpreting $\epsilon$ is that it is the unobserved error in the linear model. Using $\hat{\epsilon}$ to denote the &ldquo;error&rdquo; between $Y$ and $X \hat{\beta}$ then seems quite natural. Let&rsquo;s look at the expectation and variance of $\hat{\epsilon}$. Then, using $\eqref{vary}$, $\eqref{ehatbeta}$, $\eqref{ehaty}$, and $\eqref{reseqn}$, we have</p>
 <p>$$
 \begin{align}
 \mathbb{E}[\hat{\epsilon}] &amp;= \mathbb{E}[Y - X \hat{\beta}] \nonumber \newline
@@ -228,7 +228,7 @@ Var(\hat{\epsilon}) &amp;= Var(Y - X \hat{\beta}) \nonumber \newline
 &amp;= \sigma^2 (I - X(X^{T}X)^{-1} X^{T}) \label{varhateps}
 \end{align}
 $$</p>
-<p>Here, we make use of the property that $H = X(X^{T}X)^{-1} X^{T}$ is idempotent so that $H \cdot H = H$. We have now shown that the expected value of $\hat{\epsilon}$  is equal to zero, and that its variance, expectedly, scales with $\sigma^2$. What about the $I - H$ component of the variance? Firstly, note that $H \in \mathbb{R}^{n}$, and observe that the diagonal entries of $H$ are bounded between 0 and 1 &ndash; this is a direct consequence of the fact that $H$ is a symmetric and idempotent matrix. Then, observations that have high corresponding values on this diagonal will tend to have smaller residual variances. That is, the linear model will favour fitting these observations better than others, which can lead to unnatural results, and is thus one of the main topics of interest in model diagnostics.</p>
+<p>Here, we make use of the property that $H = X(X^{T}X)^{-1} X^{T}$ is idempotent so that $H \cdot H = H$. We have now shown that the expected value of $\hat{\epsilon}$  is equal to zero, and that its variance, expectedly, scales with $\sigma^2$. What about the $I - H$ component of the variance? Firstly, note that $H \in \mathbb{R}^{n \times n}$, and observe that the diagonal entries of $H$ are bounded between 0 and 1 &ndash; this is a direct consequence of the fact that $H$ is a symmetric and idempotent matrix. Then, observations that have high corresponding values on this diagonal will tend to have smaller residual variances. That is, the linear model will favour fitting these observations better than others, which can lead to unnatural results, and is thus one of the main topics of interest in model diagnostics.</p>
 <p>So far we have only looked at the behaviour of residuals without considering the relationships between residuals and other estimated quantities. We now turn to look at the covariance between the residuals and the least squares solution, and the covariance between the residuals and the fitted response. Using $\eqref{lssol}$, $\eqref{vary}$, and $\eqref{varhatbeta}$, we have</p>
 <p>$$
 \begin{align}
@@ -244,7 +244,7 @@ Cov(\hat{Y}, \hat{\epsilon}) &amp;= Cov(X \hat{\beta}, Y - X \hat{\beta}) \nonum
 &amp;= 0 \label{covhatyeps}
 \end{align}
 $$</p>
-<p>We have just proven an important, yet expected, result: the covariance between the residuals and least squares estimates are always zero. Why is this important? We have just shown that least squares guarantees us that there is no linear association between the residuals and our fitted response $\hat{Y}$ (via $\hat{\beta}$). In other words, residuals retain no linearity with $Y$. Let's derive one additional result to reiterate this point.</p>
+<p>We have just proven an important, yet expected, result: the covariance between the residuals and least squares estimates are always zero. Why is this important? We have just shown that least squares guarantees us that there is no linear association between the residuals and our fitted response $\hat{Y}$ (via $\hat{\beta}$). In other words, residuals retain no linearity with $Y$. Let&rsquo;s derive one additional result to reiterate this point.</p>
 <p>$$
 \begin{align}
 Cov(\hat{\beta}, \hat{Y}) &amp;= Cov(\hat{\beta}, X \hat{\beta}) \nonumber \newline
@@ -252,9 +252,9 @@ Cov(\hat{\beta}, \hat{Y}) &amp;= Cov(\hat{\beta}, X \hat{\beta}) \nonumber \newl
 &amp;= \sigma^2 X^{T} (X^{T}X)^{-1} \label{covhatbetay}
 \end{align}
 $$</p>
-<p>Here, we can see that the covariance between $\hat{\beta}$ and $\hat{Y}$ is non-zero as long as we aren't dealling with trivial cases. Combining this with the results above, we can see that our least squares solution $\hat{\beta}$ will always account for all the linear association with $Y$.</p>
+<p>Here, we can see that the covariance between $\hat{\beta}$ and $\hat{Y}$ is non-zero as long as we aren&rsquo;t dealling with trivial cases. Combining this with the results above, we can see that our least squares solution $\hat{\beta}$ will always account for all the linear association with $Y$.</p>
 <h2 id="wrapping-up">Wrapping up</h2>
-<p>There's a lot of math you can write out if you want to see it written down, and we only saw a small subset of that here. It's also not a bad thing even if you have the intuition for how things should be. Shout out if you notice any mistakes!</p>
+<p>There&rsquo;s a lot of math you can write out if you want to see it written down, and we only saw a small subset of that here. It&rsquo;s also not a bad thing even if you have the intuition for how things should be. Shout out if you notice any mistakes!</p>
 
 
 		<div id="disqus_thread"></div>
@@ -290,7 +290,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2020-01-13 17:08:49.76541 -0600 CST m=&#43;0.110501926">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2020-05-24 21:11:50.647137 -0500 CDT m=&#43;0.150072379">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

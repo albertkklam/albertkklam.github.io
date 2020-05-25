@@ -102,7 +102,7 @@
 <li>Easy to set up and configure within my already chosen environment &ndash; a Python notebook</li>
 <li>Easy to share results with my team over time</li>
 </ul>
-<p>I eventually came across this <a href="https://medium.com/@harvitronix/using-python-slack-for-quick-and-easy-mobile-push-notifications-5e5ff2b80aad">Medium post by Matt Harvey</a>, which sets out simple steps to make calls to the Slack-API using <a href="https://github.com/slackapi/python-slackclient">Slack's Python Development Kit</a>.</p>
+<p>I eventually came across this <a href="https://medium.com/@harvitronix/using-python-slack-for-quick-and-easy-mobile-push-notifications-5e5ff2b80aad">Medium post by Matt Harvey</a>, which sets out simple steps to make calls to the Slack-API using <a href="https://github.com/slackapi/python-slackclient">Slack&rsquo;s Python Development Kit</a>.</p>
 <p><em>tick, tick, tick</em></p>
 <p>Over the following days, I created a Slack channel for our growing collection of notification bots (I also added <a href="https://api.slack.com/incoming-webhooks">another one</a> for tracking activity in our Git repository) that people could subscribe to. If I wanted to record how long a particular stage took to run, I simply included a call request at the start and end of the stage, and logged the time of the corresponding Slack messages &ndash;  for my purposes, I only really needed a rough indication of how long something took. You could of course also incorporate a bit of Python code here if you wanted something more specific or rigorous than just a friendly note saying which stage had just finished &ndash; e.g. include the train and test errors and log these as well in this process.</p>
 <figure>
@@ -112,12 +112,12 @@
         </figcaption>
 </figure>
 
-<h2 id="bad-news-theres-no-official-scala-version-yet">Bad News: there's no (official) Scala version (yet)</h2>
-<p>The good news is that a lot of work is going into building one &ndash; <a href="https://github.com/gilbertw1/slack-scala-client">gilbertw1's</a> is the most active one I could find. I essentially wanted to replicate my Python-Slack setup in my <a href="http://spark-notebook.io/">Spark Notebook</a> to continue my testing, but unsurprisingly, it's not quite as straightforward as I hoped. Here is what I managed to (hastily) pull together:</p>
+<h2 id="bad-news-theres-no-official-scala-version-yet">Bad News: there&rsquo;s no (official) Scala version (yet)</h2>
+<p>The good news is that a lot of work is going into building one &ndash; <a href="https://github.com/gilbertw1/slack-scala-client">gilbertw1&rsquo;s</a> is the most active one I could find. I essentially wanted to replicate my Python-Slack setup in my <a href="http://spark-notebook.io/">Spark Notebook</a> to continue my testing, but unsurprisingly, it&rsquo;s not quite as straightforward as I hoped. Here is what I managed to (hastily) pull together:</p>
 <ol>
-<li>If you <a href="http://lmgtfy.com/?q=slack+scala+api">google <em>&ldquo;slack scala api&rdquo;</em></a>, you'll find there's a few GitHub projects and blog posts guiding you on the installation process. If you are using SBT, those will be probably be more helpful than what I'm about to share, so have a look there first. If you are, like me, trying to set up the API in Spark Notebook, keep on swimming</li>
+<li>If you <a href="http://lmgtfy.com/?q=slack+scala+api">google <em>&ldquo;slack scala api&rdquo;</em></a>, you&rsquo;ll find there&rsquo;s a few GitHub projects and blog posts guiding you on the installation process. If you are using SBT, those will be probably be more helpful than what I&rsquo;m about to share, so have a look there first. If you are, like me, trying to set up the API in Spark Notebook, keep on swimming</li>
 <li>Open your notebook and go to Edit &gt; Edit Notebook Metadata. You should see a window pop up with a JSON editor</li>
-<li>You need to change the <em>customDeps</em> parameter in order to add the Slack-Scala-API dependency. We will be using <a href="https://github.com/ponkotuy/scala-slack">ponkotuy's project</a> &ndash; more on this later</li>
+<li>You need to change the <em>customDeps</em> parameter in order to add the Slack-Scala-API dependency. We will be using <a href="https://github.com/ponkotuy/scala-slack">ponkotuy&rsquo;s project</a> &ndash; more on this later</li>
 <li>Delete the <em>null</em> and replace it with the dependency like this
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;customDeps&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> [<span style="color:#e6db74">&#34;com.ponkotuy % scala-slack_2.11 % 0.4.0&#34;</span>]
 </code></pre></div><p>Note the dependencies at the bottom of this <a href="https://mvnrepository.com/artifact/com.ponkotuy/scala-slack_2.11/0.4.0">page</a>. For example, your Scala version should be 2.11.8 &ndash; otherwise, update to this version</p>
@@ -133,17 +133,17 @@
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scala" data-lang="scala">s<span style="color:#f92672">.</span>chat<span style="color:#f92672">.</span>postMessage<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#your_channel&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Hello World!&#34;</span><span style="color:#f92672">)</span>
 </code></pre></div></li>
 </ol>
-<p>Both this library and the Python one actually have a lot more functionality than what I've shown here. Have a look to see what else you can use in your workflow!</p>
-<h2 id="why-didnt-you-use-the-other-one">Why didn't you use the other one?</h2>
-<p>I originally wanted to use gilbertw1's project since it was the only one which was actively being developed &ndash; note that ponkotuy's and all the other forks of that project haven't been updated for over a year. I went through similar steps to try to import that dependency, but ran into issues with the real time messaging client &ndash; specifically trying to use the Akka ActorSystem class. A brief recount of what I tried:</p>
+<p>Both this library and the Python one actually have a lot more functionality than what I&rsquo;ve shown here. Have a look to see what else you can use in your workflow!</p>
+<h2 id="why-didnt-you-use-the-other-one">Why didn&rsquo;t you use the other one?</h2>
+<p>I originally wanted to use gilbertw1&rsquo;s project since it was the only one which was actively being developed &ndash; note that ponkotuy&rsquo;s and all the other forks of that project haven&rsquo;t been updated for over a year. I went through similar steps to try to import that dependency, but ran into issues with the real time messaging client &ndash; specifically trying to use the Akka ActorSystem class. A brief recount of what I tried:</p>
 <ul>
-<li>I am able to import <em>slack.rtm.SlackRtmClient</em> and <em>akka.actor.ActorSystem</em>, but I'm unable to create a SlackRtmClient object &ndash; I get a Java NoSuchMethodException, which (from what I gather) means there's some mismatching versions</li>
-<li>Since Spark 2.0, <a href="http://spark.apache.org/releases/spark-release-2-0-0.html">Akka dependency has been removed</a>, so I should be able to use any version of Akka. I've tried to match Akka versions as per <a href="https://mvnrepository.com/artifact/com.github.gilbertw1/slack-scala-client_2.11">any of these repositories</a>, but to no avail</li>
-<li>I didn't go much further than this since I couldn't find any related issues in the GitHub repository, but might be worth a revisit later. For now, I'm able to get what I need with ponkotuy's project</li>
+<li>I am able to import <em>slack.rtm.SlackRtmClient</em> and <em>akka.actor.ActorSystem</em>, but I&rsquo;m unable to create a SlackRtmClient object &ndash; I get a Java NoSuchMethodException, which (from what I gather) means there&rsquo;s some mismatching versions</li>
+<li>Since Spark 2.0, <a href="http://spark.apache.org/releases/spark-release-2-0-0.html">Akka dependency has been removed</a>, so I should be able to use any version of Akka. I&rsquo;ve tried to match Akka versions as per <a href="https://mvnrepository.com/artifact/com.github.gilbertw1/slack-scala-client_2.11">any of these repositories</a>, but to no avail</li>
+<li>I didn&rsquo;t go much further than this since I couldn&rsquo;t find any related issues in the GitHub repository, but might be worth a revisit later. For now, I&rsquo;m able to get what I need with ponkotuy&rsquo;s project</li>
 </ul>
 <p>Let me know if you manage to crack this and get it to work in your Spark Notebook!</p>
 <h2 id="final-thoughts">Final thoughts</h2>
-<p>Slack is awesome for sharing snippets of information in general, and a dedicated channel for bot notifications is a really good idea especially if you are planning to go all out on recruiting a bot army. A lot of great work has already been done, so it's mostly about trying to find what works for you and your team. For me, it means I can kick off my scripts and get updates to my phone as it completes (compare that to having to sit at my desk and check every so often).</p>
+<p>Slack is awesome for sharing snippets of information in general, and a dedicated channel for bot notifications is a really good idea especially if you are planning to go all out on recruiting a bot army. A lot of great work has already been done, so it&rsquo;s mostly about trying to find what works for you and your team. For me, it means I can kick off my scripts and get updates to my phone as it completes (compare that to having to sit at my desk and check every so often).</p>
 
 
 		<div id="disqus_thread"></div>
@@ -178,7 +178,7 @@
 
         		<footer>
 			<span>
-			&copy; <time datetime="2020-01-13 17:08:49.802589 -0600 CST m=&#43;0.147679601">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2020-05-24 21:11:50.684319 -0500 CDT m=&#43;0.187252481">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
