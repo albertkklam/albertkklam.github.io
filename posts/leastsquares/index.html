@@ -136,9 +136,9 @@ $$</p>
 <p>Then, taking the derivative with respect to $\beta$ of the above expression, and setting this to zero, we have</p>
 <p>$$
 \begin{align}
-&amp;\frac{\partial}{\partial \beta} \frac{1}{2} \left( Y^{T} Y - 2 \beta^{T} X^{T} Y - \beta^{T} X^{T} X \beta \right) = X^{T} Y - X^{T} X \beta \nonumber \newline
-\implies &amp;X^{T} Y - X^{T} X \hat{\beta} = 0 \nonumber \newline
-\implies &amp;\hat{\beta} = (X^{T} X)^{-1} X^{T} Y \label{lssol}
+&amp; \frac{\partial}{\partial \beta} \frac{1}{2} \left( Y^{T} Y - 2 \beta^{T} X^{T} Y - \beta^{T} X^{T} X \beta \right) = X^{T} Y - X^{T} X \beta \nonumber \newline
+\implies \qquad &amp; X^{T} Y - X^{T} X \hat{\beta} = 0 \nonumber \newline
+\qquad &amp; \hat{\beta} = (X^{T} X)^{-1} X^{T} Y \label{lssol}
 \end{align}
 $$</p>
 <p>For completeness, we should also check that $\hat{\beta}$ is indeed a minimiser of $\eqref{lsprb}$. One way is to check the second derivative of $\frac{1}{2} \Vert Y - X \beta \Vert_{2}^{2}$ with respect to $\beta$, but a more straightforward way is to note that all norms are convex functions, and thus any point where the gradient is zero is a global minimum by first order conditions. Now that we have the least squares solution $\hat{\beta}$, our vector of fitted response values $\hat{Y}$ can be expressed as</p>
@@ -290,7 +290,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2020-05-24 21:11:50.647137 -0500 CDT m=&#43;0.150072379">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2020-05-29 12:06:55.83148 -0500 CDT m=&#43;0.080278287">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
