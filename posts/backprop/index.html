@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>[Yet Another] Backpropagation by Hand [Blog Post]  &middot; verbose: 1</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		<link rel="stylesheet" href="/css/theorems.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="verbose: 1" />
+
+		
+		<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">verbose: 1</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/posts/">
+                
+                <span>Blog</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        Albert Lam
+        <br>
+        <span>on&nbsp;</span><time datetime="2020-05-30 00:00:00 &#43;0000 UTC">May 30, 2020</time>
+</div>
+		<h1 class="post-title">[Yet Another] Backpropagation by Hand [Blog Post] </h1>
+<div class="post-line"></div>
+
+		
+
+		<h2 id="too-short-want-more">Too short; want more</h2>
+<p>I&rsquo;m using <a href="https://link.springer.com/book/10.1007/978-3-319-94463-0">Neural Networks and Deep Learning</a> by Aggarwal as a reference, which actually does a very good job of explaining the underlying mathematics already, but I&rsquo;m compelled to rewrite it with a bit more exposition that fills in some minor details. I&rsquo;m also dropping the illustrations, which may be helpful if you haven&rsquo;t seen them before, and can be found in the textbook. Most of the notation is identical to the textbook, although I&rsquo;ve made some stylistic changes here and there.</p>
+<h2 id="the-short">The short</h2>
+<p>Denote the set of hidden layer paths and their outputs in the forward direction by $\mathcal{P}$, where paths along hidden layers of length $l$ can be expressed as a sequence of outputs $(h_1, \dots, h_l)$ that are emitted from these layers, and the output at the end of this sequence is $o$. Furthermore, let the weight between layer $j$ and $j+1$ be $w_{(j,j+1)}$ for $j = 1, \dots, l-1$, and let the associated loss of $o$ be $L$. Specifically, we have</p>
+<p>$$
+\begin{align}
+h_{j+1} &amp;= \Phi_{j+1}(a_{j+1}) \nonumber \newline
+&amp;= \Phi_{j+1}(w_{(j,j+1)} \cdot h_j) \qquad \forall j = 1, \dots, l-1 \label{layer_output}
+\end{align}
+$$</p>
+<p>where $\Phi_{j+1}$ is the activation function at the $(j+1)^{th}$ hidden layer of the given path, that is applied to the pre-activation value $a_{j+1}$ passed from the $j^{th}$ hidden layer. For the edge cases involving the input $i$ and output $o$, we use a similar convention of</p>
+<p>$$
+\begin{align}
+h_1 &amp;= \Phi_1(a_1) = \Phi_1(w_{(0,1)} \cdot i) \nonumber \newline
+o &amp;= \Phi_o(a_o) = \Phi_o(w_{(l,o)} \cdot h_l) \nonumber
+\end{align}
+$$</p>
+<p>Now by the chain rule, the gradient of $L$ with respect to $w_{j,j+1}$ along a particular path $(\tilde{h}_{j+1}, \dots, \tilde{h}_l, o)$ can be expanded as</p>
+<p>$$
+\begin{align}
+\frac{\delta L}{\delta w_{(j, j+1)}} &amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta w_{(j, j+1)}} \nonumber \newline
+&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}_l} \cdot \frac{\delta \tilde{h}_l}{\delta w_{(j, j+1)}} \nonumber \newline
+&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}_l} \cdot \frac{\delta \tilde{h}_l}{\delta \tilde{h}_{l-1}} \cdot \dots \cdot \frac{\delta \tilde{h}_{j+1}}{\delta w_{(j, j+1)}} \nonumber \newline
+&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta \tilde{h}_{k+1}}{\delta \tilde{h}_{k}} \right] \cdot \frac{\delta \tilde{h}_{j+1}}{\delta w_{(j, j+1)}} \label{onevar_grad_h}
+\end{align}
+$$</p>
+<p>However, if there is more than one unique path between $L$ and $w_{(j,j+1)}$, then $\eqref{onevar_grad_h}$ needs to be adjusted using the multivariable chain rule that essentially traverses along all viable paths in $\mathcal{P}$ from $o$ to $h_j$. Using $\eqref{layer_output}$, it follows that</p>
+<p>$$
+\begin{align}
+\frac{\delta L}{\delta w_{(j, j+1)}} &amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta w_{(j, j+1)}} \nonumber \newline
+&amp;= \frac{\delta L}{\delta o} \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta o}{\delta h_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta h_{k+1}}{\delta h_{k}} \right] \right] \cdot \frac{\delta h_{j+1}}{\delta w_{(j, j+1)}} \nonumber \newline
+&amp;= \frac{\delta L}{\delta o} \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta o}{\delta h_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta h_{k+1}}{\delta h_{k}} \right] \right] \cdot \left[ h_j \cdot \Phi_{j+1}'(w_{j,j+1} \cdot h_j) \right] \label{multivar_grad_h}
+\end{align}
+$$</p>
+<p>Furthermore, observe that</p>
+<p>$$
+\begin{align}
+&amp; \frac{\delta L}{\delta o} \cdot \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta o}{\delta h_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta h_{k+1}}{\delta h_{k}} \right] \nonumber \newline
+= \qquad &amp; \frac{\delta L}{\delta h_{j+1}} \nonumber \newline
+= \qquad &amp; \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta h_{j+2}} \cdot \frac{\delta h_{j+2}}{\delta h_{j+1}} \nonumber \newline
+= \qquad &amp; \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta h_{j+2}} \cdot \frac{\delta h_{j+2}}{\delta a_{j+2}} \cdot \frac{\delta a_{j+2}}{\delta h_{j+1}} \nonumber \newline
+= \qquad &amp; \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta h_{j+2}} \cdot \Phi_{j+2}'(a_{j+2}) \cdot w_{(j+1,j+2)} \label{backprop_h}
+\end{align}
+$$</p>
+<p>Note that $\eqref{backprop_h}$ is a backwards recursive equation for computing $\frac{\delta L}{\delta h_j}$ for all $j = l, \dots, 1$. Together, $\eqref{multivar_grad_h}$ and $\eqref{backprop_h}$ allow us to perform backpropagation for training neural networks.</p>
+<h2 id="the-short-revisited">The short (revisited)</h2>
+<p>It is also possible to derive a backpropagation algorithm that applies the chain rule using $a_j$, instead of $h_j$, as intermediary variables. In this case, $\eqref{multivar_grad_h}$ becomes</p>
+<p>$$
+\begin{align}
+\frac{\delta L}{\delta w_{(j, j+1)}} &amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta w_{(j, j+1)}} \nonumber \newline
+&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta a_o} \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \right] \cdot \frac{\delta a_{j+1}}{\delta w_{(j, j+1)}} \nonumber \newline
+&amp;= \frac{\delta L}{\delta o} \cdot \Phi_o&rsquo;(a_o) \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \right] \cdot h_j \label{multivar_grad_a}
+\end{align}
+$$</p>
+<p>Similarly, $\eqref{backprop_h}$ becomes</p>
+<p>$$
+\begin{align}
+&amp; \frac{\delta L}{\delta o} \cdot \Phi_o&rsquo;(a_o) \cdot \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \nonumber \newline
+= \qquad &amp; \frac{\delta L}{\delta a_{j+1}} \nonumber \newline
+= \qquad &amp; \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta a_{j+2}} \cdot \frac{\delta a_{j+2}}{\delta a_{j+1}} \nonumber \newline
+= \qquad &amp; \Phi_{j+1}'(a_{j+1}) \cdot \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta a_{j+2}} \cdot w_{(j+1, j+2)} \label{backprop_a}
+\end{align}
+$$</p>
+<p>which together are equivalent to $\eqref{multivar_grad_h}$ and $\eqref{backprop_h}$.</p>
+<h2 id="the-really-short">The really short</h2>
+<p>Backpropagation is essentially underpinned by a product-wise accumulation of the derivative in later layers combined with the local derivative that consists of the preceding output value, the derivative of the current activation function, and the succeeding weights along all paths from the next layer.</p>
+
+
+		<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "https-albertkklam-github-com" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/optmnfld/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2020-06-02 19:57:40.810319 -0500 CDT m=&#43;0.233801893">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>
