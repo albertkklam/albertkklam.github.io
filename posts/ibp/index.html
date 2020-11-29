@@ -67,6 +67,14 @@
         </li>
     
         <li>
+            <a href="/books/">
+                
+                <span>Books</span>
+                
+            </a>
+        </li>
+    
+        <li>
             <a href="/about/">
                 
                 <span>About</span>
@@ -96,21 +104,21 @@
 		<h2 id="the-arxiv-book-club">The arXiv Book Club</h2>
 <p>A few friends and I started a reading group earlier this month since we&rsquo;re all hanging out in Chicago over the summer. This is the first of (hopefully) many posts related to various topics we cover over the next few months. Our entree (this post) summarises the theoretical results from the seminal paper on the Indian Buffet Process by <a href="http://www.jmlr.org/papers/volume12/griffiths11a/griffiths11a.pdf">Griffiths and Ghahramani (2011)</a>.</p>
 <h2 id="preliminaries">Preliminaries</h2>
-<p>For random variables $A$ and $B$, <strong>Bayes&rsquo; rule</strong> gives us</p>
+<p>For random variables $A$ and $B$, <strong>Bayes' rule</strong> gives us</p>
 <p>$$
 \begin{align}
 P(B \mid A) &amp;= \frac{P(B \cap A)}{P(A)} \nonumber \newline
 &amp;= \frac{P(A \mid B) \cdot P(B)}{P(A)} \label{bayesrule}
 \end{align}
 $$</p>
-<p>Now, suppose we have some hypothetical distribution $X$ from which data can be drawn from, and some hypothetical distribution $\theta$ from which the parameters of $X$ can be drawn from. Then, a natural problem is to find the value(s) of $\theta$ that best explains the observed data from $X$. Applying Bayes&rsquo; rule from $\eqref{bayesrule}$ is one approach</p>
+<p>Now, suppose we have some hypothetical distribution $X$ from which data can be drawn from, and some hypothetical distribution $\theta$ from which the parameters of $X$ can be drawn from. Then, a natural problem is to find the value(s) of $\theta$ that best explains the observed data from $X$. Applying Bayes' rule from $\eqref{bayesrule}$ is one approach</p>
 <p>$$
 \begin{align}
 P(\theta \mid X) &amp;= \frac{P(X \mid \theta) \cdot P(\theta)}{P(X)} \nonumber \newline
 &amp;\propto P(X \mid \theta) \cdot P(\theta) \nonumber
 \end{align}
 $$</p>
-<p>Here, $P(\theta)$ is called the <strong>prior</strong> distribution of $\theta$, which represents the distribution of $\theta$ values before any data is observed, $P(X \mid \theta)$ is the <strong>likelihood</strong>, which represents how likely we are of observing the current instance of $X$ given the $\theta$ parameter values, and $P(X)$ is the likelihood marginalised over all possible $\theta$ values. Bayes&rsquo; rule tells us that we can update the prior of $\theta$ using observations from $X$ so that our belief in the value of $\theta$ reflects the information we currently have &ndash; we call this updated distribution $P(\theta \mid X)$ the <strong>posterior</strong> distribution of $\theta$.</p>
+<p>Here, $P(\theta)$ is called the <strong>prior</strong> distribution of $\theta$, which represents the distribution of $\theta$ values before any data is observed, $P(X \mid \theta)$ is the <strong>likelihood</strong>, which represents how likely we are of observing the current instance of $X$ given the $\theta$ parameter values, and $P(X)$ is the likelihood marginalised over all possible $\theta$ values. Bayes' rule tells us that we can update the prior of $\theta$ using observations from $X$ so that our belief in the value of $\theta$ reflects the information we currently have &ndash; we call this updated distribution $P(\theta \mid X)$ the <strong>posterior</strong> distribution of $\theta$.</p>
 <h2 id="motivating-infinite-mixture-models">Motivating infinite mixture models</h2>
 <p>We will consider a simple example to make some of these ideas more concrete. Suppose we are the owners of a supermarket and we are interested in better understanding the different types of customers that shop in our store. We have access to the purchasing history of each customer, including information such as which items they purchase, at what price they purchase them at, when they purchase those items, and how many they purchase at one time. We want to use this data to infer attributes of each customer that are naturally unknown, such as their price elasticity, whether they live by themselves or as part of a large family, and whether they are young or old. The intention is to use these attributes to improve store-level operations and ensure customer satisfaction remains high.</p>
 <p>This example is a classic unsupervised learning problem, where each customer represents an observation, their purchasing history can be summarized as observable features associated with each observation, and we want to make a prediction that classifies each observation into some unobservable customer-type category. In the literature, the hidden customer category is more generally referred to as a <strong>latent variable</strong> (or latent feature) in such models, and each category itself is referred to as a <strong>class</strong> of that latent variable.</p>
@@ -164,8 +172,8 @@ P(c) &amp;= \frac{\prod_{k=1}^{K} \prod_{j=1}^{m_k - 1} \left(j + \frac{\alpha}{
 &amp;= \left(\frac{\alpha}{K} \right)^{K_+} \left(\prod_{k=1}^{K_+} \prod_{j=1}^{m_k - 1} \left(j + \frac{\alpha}{K} \right) \right) \frac{\Gamma(\alpha)}{\Gamma(N + \alpha)} \label{assignprior}
 \end{align}
 $$</p>
-<p>where $K_+$ is the number of classes for which $m_k &gt; 0$, and the indices of $m_k$ are reordered so that $m_k &gt; 0$ for all $k &lt; K_+$. Note that this does not affect the assignment prior, which is invariant to permutations of the observation order &ndash; this property is known as <strong>exchangeability</strong>. Now, observe that there are $K^{N}$ possible values for $c$, which diverges as $K \rightarrow \infty$, and thus the probability of observing any single instance assignment vector goes to 0. This motivates the consideration of modelling the distribution over <strong>equivalence classes</strong>, rather than the actual assignment vectors themselves. We explore these concepts next.</p>
-<p>A <strong>partition</strong> is a division of a set of $N$ observations into subsets, such that each observation only belongs to one subset and the ordering of the subsets do not matter. Thus, two assignment vectors that result in the same division of observations correspond to the same partition. A partition therefore defines an equivalence class $[c]$ for assignment vectors $c$, where two assignment vectors belong to the same equivalence class if they correspond to the same partition. Suppose we partition $N$ observations into $K_+$ subsets, and we have $K = K_0 + K_+$ class labels that can be applied to these subsets. Then, there are $\binom{K}{K_+} \times K_+! = \frac{K!}{K_0!}$ assignment vectors that belong to the equivalence class defined by that partition, and we can define a probability <strong>distribution over partitions</strong> by summing over all assignment vectors that belong to that class. Using the results from $\eqref{assignprior}$ and taking the limit gives us</p>
+<p>where $K_+$ is the number of classes for which $m_k &gt; 0$, and the indices of $m_k$ are reordered so that $m_k &gt; 0$ for all $k &lt; K_+$. Note that this does not affect the assignment prior, which is invariant to permutations of the observation order &ndash; this property is known as **exchangeability**. Now, observe that there are $K^{N}$ possible values for $c$, which diverges as $K \rightarrow \infty$, and thus the probability of observing any single instance assignment vector goes to 0. This motivates the consideration of modelling the distribution over **equivalence classes**, rather than the actual assignment vectors themselves. We explore these concepts next.</p>
+<p>A <strong>partition</strong> is a division of a set of $N$ observations into subsets, such that each observation only belongs to one subset and the ordering of the subsets do not matter. Thus, two assignment vectors that result in the same division of observations correspond to the same partition. A partition therefore defines an equivalence class $[c]$ for assignment vectors $c$, where two assignment vectors belong to the same equivalence class if they correspond to the same partition. Suppose we partition $N$ observations into $K_+$ subsets, and we have $K = K_0 + K_+$ class labels that can be applied to these subsets. Then, there are $\binom{K}{K_+} \times K_+! = \frac{K!}{K_0!}$ assignment vectors that belong to the equivalence class defined by that partition, and we can define a probability **distribution over partitions** by summing over all assignment vectors that belong to that class. Using the results from $\eqref{assignprior}$ and taking the limit gives us</p>
 <p>$$
 \begin{align}
 P([c]) &amp;= \sum_{c \in [c]} P(c) \nonumber \newline
@@ -290,7 +298,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2020-08-28 22:36:16.120726 -0500 CDT m=&#43;0.089052097">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2020-11-28 22:45:07.380045 -0600 CST m=&#43;0.228020018">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

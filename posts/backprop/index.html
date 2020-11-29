@@ -67,6 +67,14 @@
         </li>
     
         <li>
+            <a href="/books/">
+                
+                <span>Books</span>
+                
+            </a>
+        </li>
+    
+        <li>
             <a href="/about/">
                 
                 <span>About</span>
@@ -144,13 +152,13 @@ $$</p>
 \begin{align}
 \frac{\delta L}{\delta w_{(j, j+1)}} &amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta w_{(j, j+1)}} \nonumber \newline
 &amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta a_o} \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \right] \cdot \frac{\delta a_{j+1}}{\delta w_{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \Phi_o&rsquo;(a_o) \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \right] \cdot h_j \label{multivar_grad_a}
+&amp;= \frac{\delta L}{\delta o} \cdot \Phi_o'(a_o) \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \right] \cdot h_j \label{multivar_grad_a}
 \end{align}
 $$</p>
 <p>Similarly, $\eqref{backprop_h}$ becomes</p>
 <p>$$
 \begin{align}
-&amp; \frac{\delta L}{\delta o} \cdot \Phi_o&rsquo;(a_o) \cdot \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \nonumber \newline
+&amp; \frac{\delta L}{\delta o} \cdot \Phi_o'(a_o) \cdot \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \nonumber \newline
 = \qquad &amp; \frac{\delta L}{\delta a_{j+1}} \nonumber \newline
 = \qquad &amp; \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta a_{j+2}} \cdot \frac{\delta a_{j+2}}{\delta a_{j+1}} \nonumber \newline
 = \qquad &amp; \Phi_{j+1}'(a_{j+1}) \cdot \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta a_{j+2}} \cdot w_{(j+1, j+2)} \label{backprop_a}
@@ -193,7 +201,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2020-08-28 22:36:16.116199 -0500 CDT m=&#43;0.084524860">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2020-11-28 22:45:07.38236 -0600 CST m=&#43;0.230333287">2020</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
