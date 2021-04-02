@@ -259,16 +259,16 @@
 <p>Pretty much all the courses in statistics I took this quarter emphasised mathematical intuition over raw application and manipulation of mathematics, which is quite different to the courses I&rsquo;ve taken in the past. The point was that with enough understanding of the underlying principles, it is possible to make conclusions without having to explicitly prove a result. Nevertheless, sometimes it helps to have the math in front of you &ndash; on one hand, it reinforces the ideas you are learning about, but also, you may not be convinced of a result unless you can also write it down.</p>
 <p>Here, we will look into some of the foundational results of the linear least squares model. Some parts will have less detail than others, but hopefully the contents that we end up covering will be sufficient as a standalone post for those that already have some familiarity with the topic.</p>
 <h2 id="preliminaries">Preliminaries</h2>
-<p>Let $Y \in \mathbb{R}^{n}$ be the response to a design matrix $X \in \mathbb{R}^{n \times p}$, where $n$ is the number of observations in the given dataset, and $p$ is the number of covariates to the response. Our linear model is then of the form</p>
+<p>Let $y \in \mathbb{R}^{n}$ be the response to a design matrix $X \in \mathbb{R}^{n \times p}$, where $n$ is the number of observations in the given dataset, and $p$ is the number of covariates to the response. Our linear model is then of the form</p>
 <p>$$
 \begin{equation}
-Y = X\beta + \epsilon \label{lmeqn}
+y = X\beta + \epsilon \label{lmeqn}
 \end{equation}
 $$</p>
-<p>For $i = 1, \dots, n$, let $Y_i$, $X_i$, and $\epsilon_i$ be the $i^{th}$ observation. Then, we can also write $\eqref{lmeqn}$ as</p>
+<p>For $i = 1, \dots, n$, let $y_i$, $X_i$, and $\epsilon_i$ be the $i^{th}$ observation. Then, we can also write $\eqref{lmeqn}$ as</p>
 <p>$$
 \begin{equation}
-Y_i = X_i \beta + \epsilon_i \label{lmeqnrow}
+y_i = X_i \beta + \epsilon_i \label{lmeqnrow}
 \end{equation}
 $$</p>
 <p>The entries of $\epsilon \in \mathbb{R}^{n}$ are called noise variables, which have zero mean, constant variance $\sigma^2$, and zero correlation with each other. For $j \ne i$, these properties can be written as</p>
@@ -279,42 +279,42 @@ Var(\epsilon_i) &amp;= \sigma^2 \label{vareps} \newline
 Cov(\epsilon_i, \epsilon_j) &amp;= 0 \label{coveps}
 \end{align}
 $$</p>
-<p>These are known as the assumptions of the linear model &ndash; sometimes an additional normality property is also assumed, however for our purposes, this will not be necessary. Finally, let $\beta \in \mathbb{R}^{p}$ be the vector of coefficients in our model, whose entries are unknown values. We will first look into using the known quantities of $X$ and $Y$ to solve for $\beta$.</p>
+<p>These are known as the assumptions of the linear model &ndash; sometimes an additional normality property is also assumed, however for our purposes, this will not be necessary. Finally, let $\beta \in \mathbb{R}^{p}$ be the vector of coefficients in our model, whose entries are unknown values. We will first look into using the known quantities of $X$ and $y$ to solve for $\beta$.</p>
 <h2 id="the-least-squares-solution">The least squares solution</h2>
 <p>The least squares solution $\hat{\beta}$ to our linear model is the solution to the following minimisation problem</p>
 <p>$$
 \begin{equation}
-\hat{\beta} = \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \Vert Y - X \beta \Vert_{2}^{2} \label{lsprb}
+\hat{\beta} = \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \Vert y - X \beta \Vert_{2}^{2} \label{lsprb}
 \end{equation}
 $$</p>
 <p>Here, $\Vert \cdot \Vert_{2}$ is the $\ell_2$ norm. It follows that</p>
 <p>$$
 \begin{align*}
-\underset{\beta}{\mathrm{argmin}} \frac{1}{2} \Vert Y - X \beta \Vert_{2}^{2} &amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} (Y - X \beta)^{T} (Y - X \beta) \newline
-&amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \left( Y^{T} Y - Y^{T} X \beta - \beta^{T} X^{T} Y - \beta^{T} X^{T} X \beta \right) \newline
-&amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \left( Y^{T} Y - 2 \beta^{T} X^{T} Y - \beta^{T} X^{T} X \beta \right)
+\underset{\beta}{\mathrm{argmin}} \frac{1}{2} \Vert y - X \beta \Vert_{2}^{2} &amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} (y - X \beta)^{T} (y - X \beta) \newline
+&amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \left( y^{T} y - y^{T} X \beta - \beta^{T} X^{T} y - \beta^{T} X^{T} X \beta \right) \newline
+&amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \left( y^{T} y - 2 \beta^{T} X^{T} y - \beta^{T} X^{T} X \beta \right)
 \end{align*}
 $$</p>
 <p>Then, taking the derivative with respect to $\beta$ of the above expression, and setting this to zero, we have</p>
 <p>$$
 \begin{align}
-&amp; \frac{\partial}{\partial \beta} \frac{1}{2} \left( Y^{T} Y - 2 \beta^{T} X^{T} Y - \beta^{T} X^{T} X \beta \right) = X^{T} Y - X^{T} X \beta \nonumber \newline
-\implies \qquad &amp; X^{T} Y - X^{T} X \hat{\beta} = 0 \nonumber \newline
-\qquad &amp; \hat{\beta} = (X^{T} X)^{-1} X^{T} Y \label{lssol}
+&amp; \frac{\partial}{\partial \beta} \frac{1}{2} \left( y^{T} y - 2 \beta^{T} X^{T} y - \beta^{T} X^{T} X \beta \right) = X^{T} y - X^{T} X \beta \nonumber \newline
+\implies \qquad &amp; X^{T} y - X^{T} X \hat{\beta} = 0 \nonumber \newline
+\qquad &amp; \hat{\beta} = (X^{T} X)^{-1} X^{T} y \label{lssol}
 \end{align}
 $$</p>
-<p>For completeness, we should also check that $\hat{\beta}$ is indeed a minimiser of $\eqref{lsprb}$. One way is to check the second derivative of $\frac{1}{2} \Vert Y - X \beta \Vert_{2}^{2}$ with respect to $\beta$, but a more straightforward way is to note that all norms are convex functions, and thus any point where the gradient is zero is a global minimum by first order conditions. Now that we have the least squares solution $\hat{\beta}$, our vector of fitted response values $\hat{Y}$ can be expressed as</p>
+<p>For completeness, we should also check that $\hat{\beta}$ is indeed a minimiser of $\eqref{lsprb}$. One way is to check the second derivative of $\frac{1}{2} \Vert y - X \beta \Vert_{2}^{2}$ with respect to $\beta$, but a more straightforward way is to note that all norms are convex functions, and thus any point where the gradient is zero is a global minimum by first order conditions. Now that we have the least squares solution $\hat{\beta}$, our vector of fitted response values $\hat{y}$ can be expressed as</p>
 <p>$$
 \begin{align}
-\hat{Y} &amp;= X \hat{\beta} \label{lseqn} \newline
-&amp;= X (X^{T}X)^{-1} X^{T} Y \label{lseqnfull}
+\hat{y} &amp;= X \hat{\beta} \label{lseqn} \newline
+&amp;= X (X^{T}X)^{-1} X^{T} y \label{lseqnfull}
 \end{align}
 $$</p>
 <p>For $i = 1, \dots, n$, we can also write this as</p>
 <p>$$
 \begin{align}
-\hat{Y}_i &amp;= X_i \hat{\beta} \label{lseqnrow} \newline
-&amp;= X_i (X^{T}X)^{-1} X^{T} Y \label{lseqnrowfull}
+\hat{y}_i &amp;= X_i \hat{\beta} \label{lseqnrow} \newline
+&amp;= X_i (X^{T}X)^{-1} X^{T} y \label{lseqnrowfull}
 \end{align}
 $$</p>
 <h2 id="whats-random-and-what-isnt">What&rsquo;s random and what isn&rsquo;t</h2>
@@ -326,67 +326,67 @@ $$</p>
 Var(X) = Var(\beta) &amp;= 0 \label{var0} \newline
 \end{align}
 $$</p>
-<p>What about $Y$? Let $I$ be the identity matrix of size $n \times n$. Then, following from $\eqref{lmeqn}$, and the results from $\eqref{eeps}$, $\eqref{vareps}$, $\eqref{ex}$, $\eqref{ebeta}$, and $\eqref{var0}$, we have</p>
+<p>What about $y$? Let $I$ be the identity matrix of size $n \times n$. Then, following from $\eqref{lmeqn}$, and the results from $\eqref{eeps}$, $\eqref{vareps}$, $\eqref{ex}$, $\eqref{ebeta}$, and $\eqref{var0}$, we have</p>
 <p>$$
 \begin{align}
-\mathbb{E}[Y] &amp;= \mathbb{E}[X \beta + \epsilon] \nonumber \newline
+\mathbb{E}[y] &amp;= \mathbb{E}[X \beta + \epsilon] \nonumber \newline
 &amp;= X \beta + \mathbb{E}[\epsilon] \nonumber \newline
 &amp;= X \beta \label{ey} \newline
-Var(Y) &amp;= Var(X \beta + \epsilon) \nonumber \newline
+Var(y) &amp;= Var(X \beta + \epsilon) \nonumber \newline
 &amp;= Var(\epsilon) \nonumber \newline
 &amp;= \sigma^2 \cdot I \label{vary}
 \end{align}
 $$</p>
-<p>The notation is a bit liberal here. In particular, note that the expectation of $\epsilon$ and the variance of $\epsilon$ are actually operations on each entry of $\epsilon$. More precisely, the expectation of $\epsilon$ is a zero vector of length $n$, and the variance of $\epsilon$ is a covariance matrix $\Sigma = \sigma^2 \cdot I$ of size $n \times n$ with diagonal entries equal to $\sigma^2$ and zero everywhere else. We can also see that the variance in $Y$ arises purely from $\epsilon$, which is a random and unknown quantity. This is somewhat unexpected, since $Y$ is a known and fixed quantity to us, but one way to reason with this is that although $Y$ is fixed, it also has some component of randomness that is outside of our linear model.</p>
-<p>Let&rsquo;s turn our attention to the $\hat{\beta}$ and $\hat{Y}$ estimates. $\eqref{lseqn}$ tells us that $\hat{Y}$ depends on $\hat{\beta}$, and $\eqref{lseqnfull}$ tells us that $\hat{\beta}$ depends on $Y$. It follows that $\hat{Y}$ and $\hat{\beta}$ are random quantities, so we will look at the expectations and variances of these next.</p>
+<p>The notation is a bit liberal here. In particular, note that the expectation of $\epsilon$ and the variance of $\epsilon$ are actually operations on each entry of $\epsilon$. More precisely, the expectation of $\epsilon$ is a zero vector of length $n$, and the variance of $\epsilon$ is a covariance matrix $\Sigma = \sigma^2 \cdot I$ of size $n \times n$ with diagonal entries equal to $\sigma^2$ and zero everywhere else. We can also see that the variance in $y$ arises purely from $\epsilon$, which is a random and unknown quantity. This is somewhat unexpected, since $y$ is a known and fixed quantity to us, but one way to reason with this is that although $y$ is fixed, it also has some component of randomness that is outside of our linear model.</p>
+<p>Let&rsquo;s turn our attention to the $\hat{\beta}$ and $\hat{y}$ estimates. $\eqref{lseqn}$ tells us that $\hat{y}$ depends on $\hat{\beta}$, and $\eqref{lseqnfull}$ tells us that $\hat{\beta}$ depends on $y$. It follows that $\hat{y}$ and $\hat{\beta}$ are random quantities, so we will look at the expectations and variances of these next.</p>
 <h2 id="quality-of-least-squares-estimates">Quality of least squares estimates</h2>
-<p>The estimates $\hat{\beta}$ and $\hat{Y}$ are important because these results reflect the quality of our linear model. Using $\eqref{lssol}$, $\eqref{ex}$, and $\eqref{ey}$, we have</p>
+<p>The estimates $\hat{\beta}$ and $\hat{y}$ are important because these results reflect the quality of our linear model. Using $\eqref{lssol}$, $\eqref{ex}$, and $\eqref{ey}$, we have</p>
 <p>$$
 \begin{align}
-\mathbb{E}[\hat{\beta}] &amp;= \mathbb{E}[(X^{T} X)^{-1} X^{T} Y] \nonumber \newline
-&amp;= (X^{T} X)^{-1} X^{T} \mathbb{E}[Y] \nonumber \newline
+\mathbb{E}[\hat{\beta}] &amp;= \mathbb{E}[(X^{T} X)^{-1} X^{T} y] \nonumber \newline
+&amp;= (X^{T} X)^{-1} X^{T} \mathbb{E}[y] \nonumber \newline
 &amp;= (X^{T} X)^{-1} X^{T} X \beta \nonumber \newline
 &amp;= \beta \label{ehatbeta} \newline
-\mathbb{E}[\hat{Y}] &amp;= \mathbb{E}[X \hat{\beta}] \nonumber \newline
+\mathbb{E}[\hat{y}] &amp;= \mathbb{E}[X \hat{\beta}] \nonumber \newline
 &amp;= X \beta \nonumber \newline
-&amp;= \mathbb{E}[Y] \label{ehaty}
+&amp;= \mathbb{E}[y] \label{ehaty}
 \end{align}
 $$</p>
-<p>We have now shown that $\hat{\beta}$ is an unbiased estimator of $\beta$, and that the expected value of $\hat{Y}$ is equal to the expected value of $Y$. Furthermore,</p>
+<p>We have now shown that $\hat{\beta}$ is an unbiased estimator of $\beta$, and that the expected value of $\hat{y}$ is equal to the expected value of $y$. Furthermore,</p>
 <p>$$
 \begin{align}
-Var(\hat{\beta}) &amp;= Var(X^{T} X)^{-1} X^{T} Y) \nonumber \newline
-&amp;= (X^{T} X)^{-1} X^{T} \cdot Var(Y) \cdot X (X^{T} X)^{-1} \nonumber \newline
+Var(\hat{\beta}) &amp;= Var(X^{T} X)^{-1} X^{T} y) \nonumber \newline
+&amp;= (X^{T} X)^{-1} X^{T} \cdot Var(y) \cdot X (X^{T} X)^{-1} \nonumber \newline
 &amp;= \sigma^2 (X^{T}X)^{-1} \label{varhatbeta} \newline
-Var(\hat{Y}) &amp;= Var(X \hat{\beta}) \nonumber \newline
-&amp;= Var(X (X^{T} X)^{-1} X^{T} Y) \nonumber \newline
-&amp;= X (X^{T} X)^{-1} X^{T} Y \cdot Var(Y) \cdot X (X^{T} X)^{-1} X^{T} \nonumber \newline
+Var(\hat{y}) &amp;= Var(X \hat{\beta}) \nonumber \newline
+&amp;= Var(X (X^{T} X)^{-1} X^{T} y) \nonumber \newline
+&amp;= X (X^{T} X)^{-1} X^{T} y \cdot Var(y) \cdot X (X^{T} X)^{-1} X^{T} \nonumber \newline
 &amp;= \sigma^2 X (X^{T} X)^{-1} X^{T} \label{varhaty}
 \end{align}
 $$</p>
-<p>Observe that the variances of $\hat{\beta}$ and $\hat{Y}$ reveal a number of interesting properties regarding linear models:</p>
+<p>Observe that the variances of $\hat{\beta}$ and $\hat{y}$ reveal a number of interesting properties regarding linear models:</p>
 <ul>
-<li>The variances of both our least squares solution and our fitted response are positively associated with $\sigma^2$. That is, if $\sigma^2$ is large, the variances are also large. Intuitively, if the variance of our noise variables are large, $Y$ has a larger component of randomness, and our ability to precisely estimate the underlying $\beta$ coefficients become more difficult &ndash; imagine a scenario where we had zero noise (or noise with zero variance) so that our response could be perfectly explained by $X \beta$; here $\hat{\beta}$ would equal $\beta$, and as we introduce increasingly larger non-constant noise into our model, our ability to estimate $\beta$ deteriorates. It follows that our fitted response values $\hat{Y}$ suffer from this increased variability in $\hat{\beta}$</li>
+<li>The variances of both our least squares solution and our fitted response are positively associated with $\sigma^2$. That is, if $\sigma^2$ is large, the variances are also large. Intuitively, if the variance of our noise variables are large, $y$ has a larger component of randomness, and our ability to precisely estimate the underlying $\beta$ coefficients become more difficult &ndash; imagine a scenario where we had zero noise (or noise with zero variance) so that our response could be perfectly explained by $X \beta$; here $\hat{\beta}$ would equal $\beta$, and as we introduce increasingly larger non-constant noise into our model, our ability to estimate $\beta$ deteriorates. It follows that our fitted response values $\hat{y}$ suffer from this increased variability in $\hat{\beta}$</li>
 <li>The variances are inversely associated with $X^{T} X$. It&rsquo;s worth looking at $X^{T} X$ more closely here. Firstly, recall that $X \in \mathbb{R}^{n \times p}$, and thus $X^{T} X \in \mathbb{R}^{p \times p}$. Now, imagine we have a fixed $X$ and $X^{T} X$ of size $n \times p$ and $p \times p$ respectively. Consider the scenario where a new covariate is added to $X$ so that our new $\tilde{X}$ is of size $n \times (p+1)$, and $\tilde{X}^{T} \tilde{X}$ is of size $(p+1) \times (p+1)$. Then, let $\tilde{\beta}$ be the least squares solution when $\tilde{X}$ is the design matrix. One result you should convince yourself of is that the variance of $\tilde{\beta}$ is (almost always) larger than the variance of $\hat{\beta}$. That is, the more covariates that are added to $X$, the more variance we can expect in our least squares solution. We will skip the technical details, but the underlying principles that make this result true relate to positive semi-definite orderings, and the fact that we can show $(\tilde{X}^{T}\tilde{X})^{-1} - (X^{T}X)^{-1}$ is a positive semi-definite matrix. Intuitively, every time we add a covariate to the design matrix, we increase the chances of getting a more complex least squares solution, and more complex models tend to have higher variances than simpler ones</li>
 </ul>
-<p>The quantity we really want to understand though is not actually the least squares solution or its implied fitted response, but rather the difference between the fitted response and the true response $Y$. This is called the vector of residuals $\hat{\epsilon} \in \mathbb{R}^{n}$ of the model, and is formalised as</p>
+<p>The quantity we really want to understand though is not actually the least squares solution or its implied fitted response, but rather the difference between the fitted response and the true response $y$. This is called the vector of residuals $\hat{\epsilon} \in \mathbb{R}^{n}$ of the model, and is formalised as</p>
 <p>$$
 \begin{align}
-\hat{\epsilon} &amp;= Y - \hat{Y} \nonumber \newline
-&amp;= Y - X \hat{\beta} \label{reseqn}
+\hat{\epsilon} &amp;= y - \hat{y} \nonumber \newline
+&amp;= y - X \hat{\beta} \label{reseqn}
 \end{align}
 $$</p>
 <h2 id="analysis-of-residuals">Analysis of residuals</h2>
-<p>Recall that $\epsilon$ is the difference between $Y$ and $X \beta$, so another way of interpreting $\epsilon$ is that it is the unobserved error in the linear model. Using $\hat{\epsilon}$ to denote the &ldquo;error&rdquo; between $Y$ and $X \hat{\beta}$ then seems quite natural. Let&rsquo;s look at the expectation and variance of $\hat{\epsilon}$. Then, using $\eqref{vary}$, $\eqref{ehatbeta}$, $\eqref{ehaty}$, and $\eqref{reseqn}$, we have</p>
+<p>Recall that $\epsilon$ is the difference between $y$ and $X \beta$, so another way of interpreting $\epsilon$ is that it is the unobserved error in the linear model. Using $\hat{\epsilon}$ to denote the &ldquo;error&rdquo; between $y$ and $X \hat{\beta}$ then seems quite natural. Let&rsquo;s look at the expectation and variance of $\hat{\epsilon}$. Then, using $\eqref{vary}$, $\eqref{ehatbeta}$, $\eqref{ehaty}$, and $\eqref{reseqn}$, we have</p>
 <p>$$
 \begin{align}
-\mathbb{E}[\hat{\epsilon}] &amp;= \mathbb{E}[Y - X \hat{\beta}] \nonumber \newline
+\mathbb{E}[\hat{\epsilon}] &amp;= \mathbb{E}[y - X \hat{\beta}] \nonumber \newline
 &amp;= X \beta - X \mathbb{E}[\hat{\beta}] \nonumber \newline
 &amp;= X \beta - X \beta \nonumber \newline
 &amp;= 0 \label{ehateps} \newline
-Var(\hat{\epsilon}) &amp;= Var(Y - X \hat{\beta}) \nonumber \newline
-&amp;= Var(Y - X (X^{T}X)^{-1} X^{T} Y) \nonumber \newline
-&amp;= (I - X(X^{T}X)^{-1} X^{T}) \cdot Var(Y) \cdot (I - X(X^{T}X)^{-1} X^{T}) \nonumber \newline
+Var(\hat{\epsilon}) &amp;= Var(y - X \hat{\beta}) \nonumber \newline
+&amp;= Var(y - X (X^{T}X)^{-1} X^{T} y) \nonumber \newline
+&amp;= (I - X(X^{T}X)^{-1} X^{T}) \cdot Var(y) \cdot (I - X(X^{T}X)^{-1} X^{T}) \nonumber \newline
 &amp;= \sigma^2 (I - X(X^{T}X)^{-1} X^{T}) \label{varhateps}
 \end{align}
 $$</p>
@@ -394,27 +394,27 @@ $$</p>
 <p>So far we have only looked at the behaviour of residuals without considering the relationships between residuals and other estimated quantities. We now turn to look at the covariance between the residuals and the least squares solution, and the covariance between the residuals and the fitted response. Using $\eqref{lssol}$, $\eqref{vary}$, and $\eqref{varhatbeta}$, we have</p>
 <p>$$
 \begin{align}
-Cov(\hat{\beta}, \hat{\epsilon}) &amp;= Cov(\hat{\beta}, Y - X \hat{\beta}) \nonumber \newline
-&amp;= Cov(\hat{\beta},Y) - Cov(\hat{\beta}, X \hat{\beta}) \nonumber \newline
-&amp;= X (X^{T}X)^{-1} \cdot Var(Y) - X \cdot Var(\hat{\beta}) \nonumber \newline
+Cov(\hat{\beta}, \hat{\epsilon}) &amp;= Cov(\hat{\beta}, y - X \hat{\beta}) \nonumber \newline
+&amp;= Cov(\hat{\beta},y) - Cov(\hat{\beta}, X \hat{\beta}) \nonumber \newline
+&amp;= X (X^{T}X)^{-1} \cdot Var(y) - X \cdot Var(\hat{\beta}) \nonumber \newline
 &amp;= \sigma^2 X (X^{T}X)^{-1} - \sigma^2 X (X^{T}X)^{-1} \nonumber \newline
 &amp;= 0 \label{covhatbetaeps} \newline
-Cov(\hat{Y}, \hat{\epsilon}) &amp;= Cov(X \hat{\beta}, Y - X \hat{\beta}) \nonumber \newline
-&amp;= Cov(X \hat{\beta}, Y) - Var(X \hat{\beta}) \nonumber \newline
-&amp;= X (X^{T}X)^{-1} X^{T} \cdot Var(Y) - X \cdot Var(\hat{\beta}) \cdot X^{T} \nonumber \newline
+Cov(\hat{y}, \hat{\epsilon}) &amp;= Cov(X \hat{\beta}, y - X \hat{\beta}) \nonumber \newline
+&amp;= Cov(X \hat{\beta}, y) - Var(X \hat{\beta}) \nonumber \newline
+&amp;= X (X^{T}X)^{-1} X^{T} \cdot Var(y) - X \cdot Var(\hat{\beta}) \cdot X^{T} \nonumber \newline
 &amp;= \sigma^2 X (X^{T}X)^{-1} X^{T} - \sigma^2 X (X^{T}X)^{-1} X^{T} \nonumber \newline
 &amp;= 0 \label{covhatyeps}
 \end{align}
 $$</p>
-<p>We have just proven an important, yet expected, result: the covariance between the residuals and least squares estimates are always zero. Why is this important? We have just shown that least squares guarantees us that there is no linear association between the residuals and our fitted response $\hat{Y}$ (via $\hat{\beta}$). In other words, residuals retain no linearity with $Y$. Let&rsquo;s derive one additional result to reiterate this point.</p>
+<p>We have just proven an important, yet expected, result: the covariance between the residuals and least squares estimates are always zero. Why is this important? We have just shown that least squares guarantees us that there is no linear association between the residuals and our fitted response $\hat{y}$ (via $\hat{\beta}$). In other words, residuals retain no linearity with $y$. Let&rsquo;s derive one additional result to reiterate this point.</p>
 <p>$$
 \begin{align}
-Cov(\hat{\beta}, \hat{Y}) &amp;= Cov(\hat{\beta}, X \hat{\beta}) \nonumber \newline
+Cov(\hat{\beta}, \hat{y}) &amp;= Cov(\hat{\beta}, X \hat{\beta}) \nonumber \newline
 &amp;= X^{T} \cdot Var(\hat{\beta}) \nonumber \newline
 &amp;= \sigma^2 X^{T} (X^{T}X)^{-1} \label{covhatbetay}
 \end{align}
 $$</p>
-<p>Here, we can see that the covariance between $\hat{\beta}$ and $\hat{Y}$ is non-zero as long as we aren&rsquo;t dealling with trivial cases. Combining this with the results above, we can see that our least squares solution $\hat{\beta}$ will always account for all the linear association with $Y$.</p>
+<p>Here, we can see that the covariance between $\hat{\beta}$ and $\hat{y}$ is non-zero as long as we aren&rsquo;t dealling with trivial cases. Combining this with the results above, we can see that our least squares solution $\hat{\beta}$ will always account for all the linear association with $y$.</p>
 <h2 id="wrapping-up">Wrapping up</h2>
 <p>There&rsquo;s a lot of math you can write out if you want to see it written down, and we only saw a small subset of that here. It&rsquo;s also not a bad thing even if you have the intuition for how things should be. Shout out if you notice any mistakes!</p>
 
@@ -452,7 +452,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2021-03-23 09:44:16.81793 -0500 CDT m=&#43;0.228137461">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-04-01 20:51:26.136938 -0500 CDT m=&#43;0.087245497">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
