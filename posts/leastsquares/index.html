@@ -290,31 +290,31 @@ $$</p>
 <p>Here, $\Vert \cdot \Vert_{2}$ is the $\ell_2$ norm. It follows that</p>
 <p>$$
 \begin{align*}
-\underset{\beta}{\mathrm{argmin}} \frac{1}{2} \Vert y - X \beta \Vert_{2}^{2} &amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} (y - X \beta)^{T} (y - X \beta) \newline
-&amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \left( y^{T} y - y^{T} X \beta - \beta^{T} X^{T} y - \beta^{T} X^{T} X \beta \right) \newline
-&amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \left( y^{T} y - 2 \beta^{T} X^{T} y - \beta^{T} X^{T} X \beta \right)
+\underset{\beta}{\mathrm{argmin}} \frac{1}{2} \Vert y - X \beta \Vert_{2}^{2} &amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} (y - X \beta)^{\intercal} (y - X \beta) \newline
+&amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \left( y^{\intercal} y - y^{\intercal} X \beta - \beta^{\intercal} X^{\intercal} y - \beta^{\intercal} X^{\intercal} X \beta \right) \newline
+&amp;= \underset{\beta}{\mathrm{argmin}} \frac{1}{2} \left( y^{\intercal} y - 2 \beta^{\intercal} X^{\intercal} y - \beta^{\intercal} X^{\intercal} X \beta \right)
 \end{align*}
 $$</p>
 <p>Then, taking the derivative with respect to $\beta$ of the above expression, and setting this to zero, we have</p>
 <p>$$
 \begin{align}
-&amp; \frac{\partial}{\partial \beta} \frac{1}{2} \left( y^{T} y - 2 \beta^{T} X^{T} y - \beta^{T} X^{T} X \beta \right) = X^{T} y - X^{T} X \beta \nonumber \newline
-\implies \qquad &amp; X^{T} y - X^{T} X \hat{\beta} = 0 \nonumber \newline
-\qquad &amp; \hat{\beta} = (X^{T} X)^{-1} X^{T} y \label{lssol}
+&amp; \frac{\partial}{\partial \beta} \frac{1}{2} \left( y^{\intercal} y - 2 \beta^{\intercal} X^{\intercal} y - \beta^{\intercal} X^{\intercal} X \beta \right) = X^{\intercal} y - X^{\intercal} X \beta \nonumber \newline
+\implies \qquad &amp; X^{\intercal} y - X^{\intercal} X \hat{\beta} = 0 \nonumber \newline
+\qquad &amp; \hat{\beta} = (X^{\intercal} X)^{-1} X^{\intercal} y \label{lssol}
 \end{align}
 $$</p>
 <p>For completeness, we should also check that $\hat{\beta}$ is indeed a minimiser of $\eqref{lsprb}$. One way is to check the second derivative of $\frac{1}{2} \Vert y - X \beta \Vert_{2}^{2}$ with respect to $\beta$, but a more straightforward way is to note that all norms are convex functions, and thus any point where the gradient is zero is a global minimum by first order conditions. Now that we have the least squares solution $\hat{\beta}$, our vector of fitted response values $\hat{y}$ can be expressed as</p>
 <p>$$
 \begin{align}
 \hat{y} &amp;= X \hat{\beta} \label{lseqn} \newline
-&amp;= X (X^{T}X)^{-1} X^{T} y \label{lseqnfull}
+&amp;= X (X^{\intercal}X)^{-1} X^{\intercal} y \label{lseqnfull}
 \end{align}
 $$</p>
 <p>For $i = 1, \dots, n$, we can also write this as</p>
 <p>$$
 \begin{align}
 \hat{y}_i &amp;= X_i \hat{\beta} \label{lseqnrow} \newline
-&amp;= X_i (X^{T}X)^{-1} X^{T} y \label{lseqnrowfull}
+&amp;= X_i (X^{\intercal}X)^{-1} X^{\intercal} y \label{lseqnrowfull}
 \end{align}
 $$</p>
 <h2 id="whats-random-and-what-isnt">What&rsquo;s random and what isn&rsquo;t</h2>
@@ -343,9 +343,9 @@ $$</p>
 <p>The estimates $\hat{\beta}$ and $\hat{y}$ are important because these results reflect the quality of our linear model. Using $\eqref{lssol}$, $\eqref{ex}$, and $\eqref{ey}$, we have</p>
 <p>$$
 \begin{align}
-\mathbb{E}[\hat{\beta}] &amp;= \mathbb{E}[(X^{T} X)^{-1} X^{T} y] \nonumber \newline
-&amp;= (X^{T} X)^{-1} X^{T} \mathbb{E}[y] \nonumber \newline
-&amp;= (X^{T} X)^{-1} X^{T} X \beta \nonumber \newline
+\mathbb{E}[\hat{\beta}] &amp;= \mathbb{E}[(X^{\intercal} X)^{-1} X^{\intercal} y] \nonumber \newline
+&amp;= (X^{\intercal} X)^{-1} X^{\intercal} \mathbb{E}[y] \nonumber \newline
+&amp;= (X^{\intercal} X)^{-1} X^{\intercal} X \beta \nonumber \newline
 &amp;= \beta \label{ehatbeta} \newline
 \mathbb{E}[\hat{y}] &amp;= \mathbb{E}[X \hat{\beta}] \nonumber \newline
 &amp;= X \beta \nonumber \newline
@@ -355,19 +355,19 @@ $$</p>
 <p>We have now shown that $\hat{\beta}$ is an unbiased estimator of $\beta$, and that the expected value of $\hat{y}$ is equal to the expected value of $y$. Furthermore,</p>
 <p>$$
 \begin{align}
-Var(\hat{\beta}) &amp;= Var(X^{T} X)^{-1} X^{T} y) \nonumber \newline
-&amp;= (X^{T} X)^{-1} X^{T} \cdot Var(y) \cdot X (X^{T} X)^{-1} \nonumber \newline
-&amp;= \sigma^2 (X^{T}X)^{-1} \label{varhatbeta} \newline
+Var(\hat{\beta}) &amp;= Var(X^{\intercal} X)^{-1} X^{\intercal} y) \nonumber \newline
+&amp;= (X^{\intercal} X)^{-1} X^{\intercal} \cdot Var(y) \cdot X (X^{\intercal} X)^{-1} \nonumber \newline
+&amp;= \sigma^2 (X^{\intercal}X)^{-1} \label{varhatbeta} \newline
 Var(\hat{y}) &amp;= Var(X \hat{\beta}) \nonumber \newline
-&amp;= Var(X (X^{T} X)^{-1} X^{T} y) \nonumber \newline
-&amp;= X (X^{T} X)^{-1} X^{T} y \cdot Var(y) \cdot X (X^{T} X)^{-1} X^{T} \nonumber \newline
-&amp;= \sigma^2 X (X^{T} X)^{-1} X^{T} \label{varhaty}
+&amp;= Var(X (X^{\intercal} X)^{-1} X^{\intercal} y) \nonumber \newline
+&amp;= X (X^{\intercal} X)^{-1} X^{\intercal} y \cdot Var(y) \cdot X (X^{\intercal} X)^{-1} X^{\intercal} \nonumber \newline
+&amp;= \sigma^2 X (X^{\intercal} X)^{-1} X^{\intercal} \label{varhaty}
 \end{align}
 $$</p>
 <p>Observe that the variances of $\hat{\beta}$ and $\hat{y}$ reveal a number of interesting properties regarding linear models:</p>
 <ul>
 <li>The variances of both our least squares solution and our fitted response are positively associated with $\sigma^2$. That is, if $\sigma^2$ is large, the variances are also large. Intuitively, if the variance of our noise variables are large, $y$ has a larger component of randomness, and our ability to precisely estimate the underlying $\beta$ coefficients become more difficult &ndash; imagine a scenario where we had zero noise (or noise with zero variance) so that our response could be perfectly explained by $X \beta$; here $\hat{\beta}$ would equal $\beta$, and as we introduce increasingly larger non-constant noise into our model, our ability to estimate $\beta$ deteriorates. It follows that our fitted response values $\hat{y}$ suffer from this increased variability in $\hat{\beta}$</li>
-<li>The variances are inversely associated with $X^{T} X$. It&rsquo;s worth looking at $X^{T} X$ more closely here. Firstly, recall that $X \in \mathbb{R}^{n \times p}$, and thus $X^{T} X \in \mathbb{R}^{p \times p}$. Now, imagine we have a fixed $X$ and $X^{T} X$ of size $n \times p$ and $p \times p$ respectively. Consider the scenario where a new covariate is added to $X$ so that our new $\tilde{X}$ is of size $n \times (p+1)$, and $\tilde{X}^{T} \tilde{X}$ is of size $(p+1) \times (p+1)$. Then, let $\tilde{\beta}$ be the least squares solution when $\tilde{X}$ is the design matrix. One result you should convince yourself of is that the variance of $\tilde{\beta}$ is (almost always) larger than the variance of $\hat{\beta}$. That is, the more covariates that are added to $X$, the more variance we can expect in our least squares solution. We will skip the technical details, but the underlying principles that make this result true relate to positive semi-definite orderings, and the fact that we can show $(\tilde{X}^{T}\tilde{X})^{-1} - (X^{T}X)^{-1}$ is a positive semi-definite matrix. Intuitively, every time we add a covariate to the design matrix, we increase the chances of getting a more complex least squares solution, and more complex models tend to have higher variances than simpler ones</li>
+<li>The variances are inversely associated with $X^{\intercal} X$. It&rsquo;s worth looking at $X^{\intercal} X$ more closely here. Firstly, recall that $X \in \mathbb{R}^{n \times p}$, and thus $X^{\intercal} X \in \mathbb{R}^{p \times p}$. Now, imagine we have a fixed $X$ and $X^{\intercal} X$ of size $n \times p$ and $p \times p$ respectively. Consider the scenario where a new covariate is added to $X$ so that our new $\tilde{X}$ is of size $n \times (p+1)$, and $\tilde{X}^{\intercal} \tilde{X}$ is of size $(p+1) \times (p+1)$. Then, let $\tilde{\beta}$ be the least squares solution when $\tilde{X}$ is the design matrix. One result you should convince yourself of is that the variance of $\tilde{\beta}$ is (almost always) larger than the variance of $\hat{\beta}$. That is, the more covariates that are added to $X$, the more variance we can expect in our least squares solution. We will skip the technical details, but the underlying principles that make this result true relate to positive semi-definite orderings, and the fact that we can show $(\tilde{X}^{\intercal}\tilde{X})^{-1} - (X^{\intercal}X)^{-1}$ is a positive semi-definite matrix. Intuitively, every time we add a covariate to the design matrix, we increase the chances of getting a more complex least squares solution, and more complex models tend to have higher variances than simpler ones</li>
 </ul>
 <p>The quantity we really want to understand though is not actually the least squares solution or its implied fitted response, but rather the difference between the fitted response and the true response $y$. This is called the vector of residuals $\hat{\epsilon} \in \mathbb{R}^{n}$ of the model, and is formalised as</p>
 <p>$$
@@ -385,24 +385,24 @@ $$</p>
 &amp;= X \beta - X \beta \nonumber \newline
 &amp;= 0 \label{ehateps} \newline
 Var(\hat{\epsilon}) &amp;= Var(y - X \hat{\beta}) \nonumber \newline
-&amp;= Var(y - X (X^{T}X)^{-1} X^{T} y) \nonumber \newline
-&amp;= (I - X(X^{T}X)^{-1} X^{T}) \cdot Var(y) \cdot (I - X(X^{T}X)^{-1} X^{T}) \nonumber \newline
-&amp;= \sigma^2 (I - X(X^{T}X)^{-1} X^{T}) \label{varhateps}
+&amp;= Var(y - X (X^{\intercal}X)^{-1} X^{\intercal} y) \nonumber \newline
+&amp;= (I - X(X^{\intercal}X)^{-1} X^{\intercal}) \cdot Var(y) \cdot (I - X(X^{\intercal}X)^{-1} X^{\intercal}) \nonumber \newline
+&amp;= \sigma^2 (I - X(X^{\intercal}X)^{-1} X^{\intercal}) \label{varhateps}
 \end{align}
 $$</p>
-<p>Here, we make use of the property that $H = X(X^{T}X)^{-1} X^{T}$ is idempotent so that $H \cdot H = H$. We have now shown that the expected value of $\hat{\epsilon}$  is equal to zero, and that its variance, expectedly, scales with $\sigma^2$. What about the $I - H$ component of the variance? Firstly, note that $H \in \mathbb{R}^{n \times n}$, and observe that the diagonal entries of $H$ are bounded between 0 and 1 &ndash; this is a direct consequence of the fact that $H$ is a symmetric and idempotent matrix. Then, observations that have high corresponding values on this diagonal will tend to have smaller residual variances. That is, the linear model will favour fitting these observations better than others, which can lead to unnatural results, and is thus one of the main topics of interest in model diagnostics.</p>
+<p>Here, we make use of the property that $H = X(X^{\intercal}X)^{-1} X^{\intercal}$ is idempotent so that $H \cdot H = H$. We have now shown that the expected value of $\hat{\epsilon}$  is equal to zero, and that its variance, expectedly, scales with $\sigma^2$. What about the $I - H$ component of the variance? Firstly, note that $H \in \mathbb{R}^{n \times n}$, and observe that the diagonal entries of $H$ are bounded between 0 and 1 &ndash; this is a direct consequence of the fact that $H$ is a symmetric and idempotent matrix. Then, observations that have high corresponding values on this diagonal will tend to have smaller residual variances. That is, the linear model will favour fitting these observations better than others, which can lead to unnatural results, and is thus one of the main topics of interest in model diagnostics.</p>
 <p>So far we have only looked at the behaviour of residuals without considering the relationships between residuals and other estimated quantities. We now turn to look at the covariance between the residuals and the least squares solution, and the covariance between the residuals and the fitted response. Using $\eqref{lssol}$, $\eqref{vary}$, and $\eqref{varhatbeta}$, we have</p>
 <p>$$
 \begin{align}
 Cov(\hat{\beta}, \hat{\epsilon}) &amp;= Cov(\hat{\beta}, y - X \hat{\beta}) \nonumber \newline
 &amp;= Cov(\hat{\beta},y) - Cov(\hat{\beta}, X \hat{\beta}) \nonumber \newline
-&amp;= X (X^{T}X)^{-1} \cdot Var(y) - X \cdot Var(\hat{\beta}) \nonumber \newline
-&amp;= \sigma^2 X (X^{T}X)^{-1} - \sigma^2 X (X^{T}X)^{-1} \nonumber \newline
+&amp;= X (X^{\intercal}X)^{-1} \cdot Var(y) - X \cdot Var(\hat{\beta}) \nonumber \newline
+&amp;= \sigma^2 X (X^{\intercal}X)^{-1} - \sigma^2 X (X^{\intercal}X)^{-1} \nonumber \newline
 &amp;= 0 \label{covhatbetaeps} \newline
 Cov(\hat{y}, \hat{\epsilon}) &amp;= Cov(X \hat{\beta}, y - X \hat{\beta}) \nonumber \newline
 &amp;= Cov(X \hat{\beta}, y) - Var(X \hat{\beta}) \nonumber \newline
-&amp;= X (X^{T}X)^{-1} X^{T} \cdot Var(y) - X \cdot Var(\hat{\beta}) \cdot X^{T} \nonumber \newline
-&amp;= \sigma^2 X (X^{T}X)^{-1} X^{T} - \sigma^2 X (X^{T}X)^{-1} X^{T} \nonumber \newline
+&amp;= X (X^{\intercal}X)^{-1} X^{\intercal} \cdot Var(y) - X \cdot Var(\hat{\beta}) \cdot X^{\intercal} \nonumber \newline
+&amp;= \sigma^2 X (X^{\intercal}X)^{-1} X^{\intercal} - \sigma^2 X (X^{\intercal}X)^{-1} X^{\intercal} \nonumber \newline
 &amp;= 0 \label{covhatyeps}
 \end{align}
 $$</p>
@@ -410,8 +410,8 @@ $$</p>
 <p>$$
 \begin{align}
 Cov(\hat{\beta}, \hat{y}) &amp;= Cov(\hat{\beta}, X \hat{\beta}) \nonumber \newline
-&amp;= X^{T} \cdot Var(\hat{\beta}) \nonumber \newline
-&amp;= \sigma^2 X^{T} (X^{T}X)^{-1} \label{covhatbetay}
+&amp;= X^{\intercal} \cdot Var(\hat{\beta}) \nonumber \newline
+&amp;= \sigma^2 X^{\intercal} (X^{\intercal}X)^{-1} \label{covhatbetay}
 \end{align}
 $$</p>
 <p>Here, we can see that the covariance between $\hat{\beta}$ and $\hat{y}$ is non-zero as long as we aren&rsquo;t dealling with trivial cases. Combining this with the results above, we can see that our least squares solution $\hat{\beta}$ will always account for all the linear association with $y$.</p>
@@ -452,7 +452,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2021-04-01 20:51:26.136938 -0500 CDT m=&#43;0.087245497">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-04-03 13:41:56.186725 -0500 CDT m=&#43;0.096214044">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
