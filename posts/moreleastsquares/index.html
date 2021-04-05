@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>[Yet Another] Backpropagation by Hand [Blog Post] &middot; verbose: 1</title>
+		<title>More Notes on Least Squares &middot; verbose: 1</title>
 
 		
   		<link rel="stylesheet" href="/css/style.css">
@@ -248,79 +248,61 @@
     <span>Written by</span>
         Albert Lam
         <br>
-        <span>on&nbsp;</span><time datetime="2020-05-30 00:00:00 &#43;0000 UTC">May 30, 2020</time>
+        <span>on&nbsp;</span><time datetime="2021-04-01 00:00:00 &#43;0000 UTC">April 1, 2021</time>
 </div>
-		<h1 class="post-title">[Yet Another] Backpropagation by Hand [Blog Post]</h1>
+		<h1 class="post-title">More Notes on Least Squares</h1>
 <div class="post-line"></div>
 
 		
 
-		<h2 id="too-short-want-more">Too short; want more</h2>
-<p>I&rsquo;m using <a href="https://link.springer.com/book/10.1007/978-3-319-94463-0">Neural Networks and Deep Learning</a> by Aggarwal as a reference, which actually does a very good job of explaining the underlying mathematics already, but I&rsquo;m compelled to rewrite it with a bit more exposition that fills in some minor details. I&rsquo;m also dropping the illustrations, which may be helpful if you haven&rsquo;t seen them before, and can be found in the textbook. Most of the notation is identical to the textbook, although I&rsquo;ve made some stylistic changes here and there.</p>
-<h2 id="the-short">The short</h2>
-<p>Denote the set of hidden layer paths and their outputs in the forward direction by $\mathcal{P}$, where paths along hidden layers of length $l$ can be expressed as a sequence of outputs $(h_1, \dots, h_l)$ that are emitted from these layers, and the output at the end of this sequence is $o$. Furthermore, let the weight between layer $j$ and $j+1$ be $w_{(j,j+1)}$ for $j = 1, \dots, l-1$, and let the associated loss of $o$ be $L$. Specifically, we have</p>
+		<h2 id="continuing-on-from-last-time">Continuing on from last time</h2>
+<p>This is actually an exercise from Chapter 2 of Hastie et al. <em>&ldquo;The Elements of Statistical Learning&rdquo;</em>, which reminded me of my <a href="/posts/leastsquares/">post from yesteryear</a>, which then reminded me that I haven&rsquo;t blogged in a quite a while&hellip;</p>
+<p>Let $y \in \mathbb{R}^{n}$ be the response to a design matrix $X \in \mathbb{R}^{n \times p}$, where $n$ is the number of observations in the given dataset, and $p$ is the number of covariates. Our linear model is then of the form</p>
+<p>$$
+\begin{equation}
+y = X\beta + \epsilon \label{lmeqn}
+\end{equation}
+$$</p>
+<p>The entries of $\epsilon \in \mathbb{R}^{n}$ are called noise variables, which have zero mean, constant variance $\sigma^2$, and zero correlation with each other. Finally, $\beta \in \mathbb{R}^{p}$ is the vector of coefficients in our model.</p>
+<h2 id="expected-prediction-error">Expected prediction error</h2>
+<p>Suppose that we have a test set consisting of one observation $(X_0, y_0)$, where $X_0 \in \mathbb{R}^{p}$ and $y_0 \in \mathbb{R}$, and we are interested in computing the expected error in the prediction $\hat{y}_0 \in \mathbb{R}$. Then, it follows that</p>
 <p>$$
 \begin{align}
-h_{j+1} &amp;= \Phi_{j+1}(a_{j+1}) \nonumber \newline
-&amp;= \Phi_{j+1}(w_{(j,j+1)} \cdot h_j) \qquad \forall j = 1, \dots, l-1 \label{layer_output}
+\mathbb{E}_{y_0 \mid X_0} \left[ MSE(\hat{y}_{0}) \right] &amp;= \mathbb{E}_{y_0 \mid X_0} \left[ \mathbb{E}_{X} \left[ (y_0 - \hat{y}_0)^2 \right] \right] \nonumber \newline
+&amp;= \mathbb{E}_{X} \left[ \mathbb{E}_{y_0 \mid X_0} \left[ (y_0 - \hat{y}_0)^2 \mid X = X_0 \right] \right] \nonumber \newline
+&amp;= \mathbb{E}_{X} \left[ Var(y_0 - \hat{y}_0 \mid X = X_0) + \left( \mathbb{E}_{y_0 \mid X_0} \left[ y_0 - \hat{y}_0 \mid X = X_0 \right] \right)^2 \right] \nonumber \newline
+&amp;= Var(\hat{y}_0 \mid X = X_0) + \mathbb{E}_{X} \left[ (y_0 - \hat{y}_0)^2 \right] \nonumber \newline
+&amp;= Var(\hat{y}_0 \mid X = X_0) + Var(y_0 - \hat{y}_0) + \left( \mathbb{E}_{X} \left[ y_0 - \hat{y}_0 \right] \right)^2 \nonumber \newline
+&amp;= Var(\hat{y}_0 \mid X = X_0) + Var(\hat{y}_0) \nonumber \newline
+&amp;= \sigma^2 + Var\left(y^{\intercal} X (X^\intercal X)^{-1} X_0 \right) \nonumber \newline
+&amp;= \sigma^2 + X_0^{\intercal} (X^\intercal X)^{-1} X^\intercal \cdot Var(y) \cdot X (X^\intercal X)^{-1} X_0 \nonumber \newline
+&amp;= \sigma^2 \left(1 + X_0^{\intercal} (X^\intercal X)^{-1} X_0 \right) \label{msehaty}
 \end{align}
 $$</p>
-<p>where $\Phi_{j+1}$ is the activation function at the $(j+1)^{th}$ hidden layer of the given path, that is applied to the pre-activation value $a_{j+1}$ passed from the $j^{th}$ hidden layer. For the edge cases involving the input $i$ and output $o$, we use a similar convention of</p>
+<p>In my last <a href="/posts/leastsquares/">post</a>, I presented this result about the variance of $\hat{y}$</p>
 <p>$$
 \begin{align}
-h_1 &amp;= \Phi_1(a_1) = \Phi_1(w_{(0,1)} \cdot i) \nonumber \newline
-o &amp;= \Phi_o(a_o) = \Phi_o(w_{(l,o)} \cdot h_l) \nonumber
+Var(\hat{y}) &amp;= Var(X \hat{\beta}) \nonumber \newline
+&amp;= Var(X (X^{\intercal} X)^{-1} X^{\intercal} y) \nonumber \newline
+&amp;= X (X^{\intercal} X)^{-1} X^{\intercal}) \cdot Var(y) \cdot X (X^{\intercal} X)^{-1} X^{\intercal} \nonumber \newline
+&amp;= \sigma^2 X (X^{\intercal} X)^{-1} X^{\intercal} \label{varhaty}
 \end{align}
 $$</p>
-<p>Now by the chain rule, the gradient of $L$ with respect to $w_{j,j+1}$ along a particular path $(\tilde{h}_{j+1}, \dots, \tilde{h}_l, o)$ can be expanded as</p>
+<p>Recall that $\hat{y}$ is unbiased since $\mathbb{E}\left[\hat{y} \right] = \mathbb{E}\left[ y \right]$, and $MSE(\hat{y}) = Var(\hat{y})$. Thus, comparing $\eqref{msehaty}$ and $\eqref{varhaty}$, we see that we have incurred an additional $\sigma^2$ term in the error when $(X_0, y_0) \notin \{ X,y \}$. This result actually isn&rsquo;t that surprising &ndash; the expected error on a test set will always be greater than the error on the training set.</p>
+<h2 id="an-additional-result">An additional result</h2>
+<p>If $X^\intercal X \rightarrow N Var(X)$, continuing from $\eqref{msehaty}$, we also have</p>
 <p>$$
 \begin{align}
-\frac{\delta L}{\delta w_{(j, j+1)}} &amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta w_{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}_l} \cdot \frac{\delta \tilde{h}_l}{\delta w_{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}_l} \cdot \frac{\delta \tilde{h}_l}{\delta \tilde{h}_{l-1}} \cdot \dots \cdot \frac{\delta \tilde{h}_{j+1}}{\delta w_{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta \tilde{h}_{k+1}}{\delta \tilde{h}_{k}} \right] \cdot \frac{\delta \tilde{h}_{j+1}}{\delta w_{(j, j+1)}} \label{onevar_grad_h}
+\mathbb{E}_{X_0} \left[ \mathbb{E}_{y_0 \mid X_0}\left[ MSE(\hat{y}_{0}) \right] \right] &amp;\rightarrow \frac{\sigma^2}{N} \mathbb{E}_{X_0} \left[ X_0^{\intercal} (Var(X))^{-1} X_0 \right] + \sigma^2 \nonumber \newline
+&amp;= \frac{\sigma^2}{N} \mathbb{E}_{X_0} \left[ \mathrm{Tr} \left( X_0^{\intercal} (Var(X))^{-1} X_0 \right) \right] + \sigma^2 \label{trace} \newline
+&amp;= \frac{\sigma^2}{N} \mathbb{E}_{X_0} \left[ \mathrm{Tr} \left( X_0 X_0^{\intercal} (Var(X))^{-1} \right) \right] + \sigma^2 \label{cyclic_trace} \newline
+&amp;= \frac{\sigma^2}{N} \mathrm{Tr} \left( \mathbb{E}_{X_0} \left[ X_0 X_0^{\intercal} (Var(X))^{-1}  \right] \right) + \sigma^2 \label{linear} \newline
+&amp;= \frac{\sigma^2}{N} \mathrm{Tr} \left( (Var(X))^{-1}  Var(x_0) \right) + \sigma^2 \nonumber \newline
+&amp;= \frac{\sigma^2}{N} \mathrm{Tr} \left( I_{p} \right) + \sigma^2 \nonumber \newline
+&amp;= \frac{\sigma^2 p}{N} + \sigma^2
 \end{align}
 $$</p>
-<p>However, if there is more than one unique path between $L$ and $w_{(j,j+1)}$, then $\eqref{onevar_grad_h}$ needs to be adjusted using the multivariable chain rule that essentially traverses along all viable paths in $\mathcal{P}$ from $o$ to $h_j$. Using $\eqref{layer_output}$, it follows that</p>
-<p>$$
-\begin{align}
-\frac{\delta L}{\delta w_{(j, j+1)}} &amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta w_{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta o}{\delta h_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta h_{k+1}}{\delta h_{k}} \right] \right] \cdot \frac{\delta h_{j+1}}{\delta w_{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta o}{\delta h_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta h_{k+1}}{\delta h_{k}} \right] \right] \cdot \left[ h_j \cdot \Phi_{j+1}'(w_{j,j+1} \cdot h_j) \right] \label{multivar_grad_h}
-\end{align}
-$$</p>
-<p>Furthermore, observe that</p>
-<p>$$
-\begin{align}
-&amp; \frac{\delta L}{\delta o} \cdot \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta o}{\delta h_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta h_{k+1}}{\delta h_{k}} \right] \nonumber \newline
-= \qquad &amp; \frac{\delta L}{\delta h_{j+1}} \nonumber \newline
-= \qquad &amp; \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta h_{j+2}} \cdot \frac{\delta h_{j+2}}{\delta h_{j+1}} \nonumber \newline
-= \qquad &amp; \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta h_{j+2}} \cdot \frac{\delta h_{j+2}}{\delta a_{j+2}} \cdot \frac{\delta a_{j+2}}{\delta h_{j+1}} \nonumber \newline
-= \qquad &amp; \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta h_{j+2}} \cdot \Phi_{j+2}'(a_{j+2}) \cdot w_{(j+1,j+2)} \label{backprop_h}
-\end{align}
-$$</p>
-<p>Note that $\eqref{backprop_h}$ is a backwards recursive equation for computing $\frac{\delta L}{\delta h_j}$ for all $j = l, \dots, 1$. Together, $\eqref{multivar_grad_h}$ and $\eqref{backprop_h}$ allow us to perform backpropagation for training neural networks.</p>
-<h2 id="the-short-revisited">The short (revisited)</h2>
-<p>It is also possible to derive a backpropagation algorithm that applies the chain rule using $a_j$, instead of $h_j$, as intermediary variables. In this case, $\eqref{multivar_grad_h}$ becomes</p>
-<p>$$
-\begin{align}
-\frac{\delta L}{\delta w_{(j, j+1)}} &amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta w_{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta a_o} \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \right] \cdot \frac{\delta a_{j+1}}{\delta w_{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \Phi_o'(a_o) \cdot \left[ \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \right] \cdot h_j \label{multivar_grad_a}
-\end{align}
-$$</p>
-<p>Similarly, $\eqref{backprop_h}$ becomes</p>
-<p>$$
-\begin{align}
-&amp; \frac{\delta L}{\delta o} \cdot \Phi_o'(a_o) \cdot \sum_{(k,l): (h_{j+1}, \dots, h_l, o) \in \mathcal{P}} \frac{\delta a_o}{\delta a_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta a_{k+1}}{\delta a_{k}} \right] \nonumber \newline
-= \qquad &amp; \frac{\delta L}{\delta a_{j+1}} \nonumber \newline
-= \qquad &amp; \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta a_{j+2}} \cdot \frac{\delta a_{j+2}}{\delta a_{j+1}} \nonumber \newline
-= \qquad &amp; \Phi_{j+1}'(a_{j+1}) \cdot \sum_{j+2: (h_{j+1}, h_{j+2}) \in \mathcal{P}} \frac{\delta L}{\delta a_{j+2}} \cdot w_{(j+1, j+2)} \label{backprop_a}
-\end{align}
-$$</p>
-<p>which together are equivalent to $\eqref{multivar_grad_h}$ and $\eqref{backprop_h}$.</p>
-<h2 id="the-really-short">The really short</h2>
-<p>Backpropagation is essentially underpinned by a product-wise accumulation of the derivative in later layers combined with the local derivative that consists of the preceding output value, the derivative of the current activation function, and the succeeding weights along all paths from the next layer.</p>
+<p>Here, we make use of the fact that $X_0^{\intercal} (Var(X))^{-1} X_0 \in \mathbb{R}$, and thus its trace is equal to itself in $\eqref{trace}$; the cyclic property of the trace in $\eqref{cyclic_trace}$; and the linearity of the trace in $\eqref{linear}$. This shows that the expected error on the test set scales linearly with $\frac{p}{N}$. That is, as long as $p \ll N$ (or $\sigma^2$ is small), the growth in the expected error will be small.</p>
 
 
 		<div id="disqus_thread"></div>
@@ -346,8 +328,7 @@ $$</p>
 	</div>
 
 	<div class="pagination">
-		<a href="/posts/optmnfld/" class="left arrow">&#8592;</a>
-		<a href="/posts/decorators/" class="right arrow">&#8594;</a>
+		<a href="/posts/decorators/" class="left arrow">&#8592;</a>
 
 		<a href="#" class="top">Top</a>
 	</div>
@@ -356,7 +337,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2021-04-04 20:06:01.179503 -0500 CDT m=&#43;0.170051118">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-04-04 20:06:01.183106 -0500 CDT m=&#43;0.173654145">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

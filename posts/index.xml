@@ -6,7 +6,16 @@
     <description>Recent content in Posts on verbose: 1</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 23 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 01 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>More Notes on Least Squares</title>
+      <link>/posts/moreleastsquares/</link>
+      <pubDate>Thu, 01 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/moreleastsquares/</guid>
+      <description>The gift that keeps on giving</description>
+    </item>
+    
     <item>
       <title>Improve Your Python Game</title>
       <link>/posts/decorators/</link>
