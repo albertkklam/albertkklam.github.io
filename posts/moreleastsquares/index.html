@@ -299,10 +299,10 @@ $$</p>
 &amp;= \frac{\sigma^2}{N} \mathrm{Tr} \left( \mathbb{E}_{X_0} \left[ X_0 X_0^{\intercal} (Var(X))^{-1}  \right] \right) + \sigma^2 \label{linear} \newline
 &amp;= \frac{\sigma^2}{N} \mathrm{Tr} \left( (Var(X))^{-1}  Var(x_0) \right) + \sigma^2 \nonumber \newline
 &amp;= \frac{\sigma^2}{N} \mathrm{Tr} \left( I_{p} \right) + \sigma^2 \nonumber \newline
-&amp;= \frac{\sigma^2 p}{N} + \sigma^2
+&amp;= \frac{\sigma^2 p}{N} + \sigma^2 \label{exp_err}
 \end{align}
 $$</p>
-<p>Here, we make use of the fact that $X_0^{\intercal} (Var(X))^{-1} X_0 \in \mathbb{R}$, and thus its trace is equal to itself in $\eqref{trace}$; the cyclic property of the trace in $\eqref{cyclic_trace}$; and the linearity of the trace in $\eqref{linear}$. This shows that the expected error on the test set scales linearly with $\frac{p}{N}$. That is, as long as $p \ll N$ (or $\sigma^2$ is small), the growth in the expected error will be small.</p>
+<p>Here, we make use of the fact that $X_0^{\intercal} (Var(X))^{-1} X_0 \in \mathbb{R}$, and thus its trace is equal to itself in $\eqref{trace}$; the cyclic property of the trace in $\eqref{cyclic_trace}$; and the linearity of the trace in $\eqref{linear}$. The result in $\eqref{exp_err}$ shows that the expected error on the test set scales linearly with $\frac{p}{N}$. That is, as long as $p \ll N$ (or $\sigma^2$ is small), the growth in the expected error will be small.</p>
 
 
 		<div id="disqus_thread"></div>
@@ -337,7 +337,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2021-04-05 18:52:47.555489 -0500 CDT m=&#43;0.190424201">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-04-16 19:07:59.312315 -0500 CDT m=&#43;0.199206665">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
