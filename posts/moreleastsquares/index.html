@@ -261,7 +261,7 @@
 		
 
 		<h2 id="continuing-on-from-last-time">Continuing on from last time</h2>
-<p>This is actually an exercise from Chapter 2 of Hastie et al. <em>&ldquo;The Elements of Statistical Learning&rdquo;</em>, which reminded me of my <a href="/posts/leastsquares/">post from yesteryear</a>, which then reminded me that I haven&rsquo;t blogged in a quite a while&hellip;</p>
+<p>This is actually based on a couple of exercises from Chapters 2 and 3 of Hastie et al. <em>&ldquo;The Elements of Statistical Learning&rdquo;</em>, which reminded me of my <a href="/posts/leastsquares/">post from yesteryear</a>, which then reminded me that I haven&rsquo;t blogged in a quite a while&hellip;</p>
 <p>Let $y \in \mathbb{R}^{n}$ be the response to a design matrix $X \in \mathbb{R}^{n \times p}$, where $n$ is the number of observations in the given dataset, and $p$ is the number of covariates. Our linear model is then of the form</p>
 <p>$$
 \begin{equation}
@@ -269,7 +269,7 @@ y = X\beta + \epsilon \label{lmeqn}
 \end{equation}
 $$</p>
 <p>The entries of $\epsilon \in \mathbb{R}^{n}$ are called noise variables, which have zero mean, constant variance $\sigma^2$, and zero correlation with each other. Finally, $\beta \in \mathbb{R}^{p}$ is the vector of coefficients in our model.</p>
-<h2 id="expected-prediction-error">Expected prediction error</h2>
+<h2 id="prediction-error">Prediction error</h2>
 <p>Suppose that we have a test set consisting of one observation $(X_0, y_0)$, where $X_0 \in \mathbb{R}^{p}$ and $y_0 \in \mathbb{R}$, and we are interested in computing the expected error in the prediction $\hat{y}_0 \in \mathbb{R}$. Then, it follows that</p>
 <p>$$
 \begin{align}
@@ -294,20 +294,43 @@ Var(\hat{y}) &amp;= Var(X \hat{\beta}) \nonumber \newline
 \end{align}
 $$</p>
 <p>Recall that $\hat{y}$ is unbiased since $\mathbb{E}\left[\hat{y} \right] = \mathbb{E}\left[ y \right]$, and $MSE(\hat{y}) = Var(\hat{y})$. Thus, comparing $\eqref{msehaty}$ and $\eqref{varhaty}$, we see that we have incurred an additional $\sigma^2$ term in the error when $(X_0, y_0) \notin \{ X,y \}$. This result actually isn&rsquo;t that surprising &ndash; the expected error on a test set will always be greater than the error on the training set.</p>
-<h2 id="an-additional-result">An additional result</h2>
-<p>If $X^\intercal X \rightarrow N Var(X)$, continuing from $\eqref{msehaty}$, we also have</p>
+<h2 id="the-benefits-of-more-data">The benefits of more data</h2>
+<p>If $X^\intercal X \rightarrow n Var(X)$, continuing from $\eqref{msehaty}$, we also have</p>
 <p>$$
 \begin{align}
-\mathbb{E}_{X_0} \left[ \mathbb{E}_{y_0 \mid X_0}\left[ MSE(\hat{y}_{0}) \right] \right] &amp;\rightarrow \frac{\sigma^2}{N} \mathbb{E}_{X_0} \left[ X_0^{\intercal} (Var(X))^{-1} X_0 \right] + \sigma^2 \nonumber \newline
-&amp;= \frac{\sigma^2}{N} \mathbb{E}_{X_0} \left[ \mathrm{Tr} \left( X_0^{\intercal} (Var(X))^{-1} X_0 \right) \right] + \sigma^2 \label{trace} \newline
-&amp;= \frac{\sigma^2}{N} \mathbb{E}_{X_0} \left[ \mathrm{Tr} \left( X_0 X_0^{\intercal} (Var(X))^{-1} \right) \right] + \sigma^2 \label{cyclic_trace} \newline
-&amp;= \frac{\sigma^2}{N} \mathrm{Tr} \left( \mathbb{E}_{X_0} \left[ X_0 X_0^{\intercal} (Var(X))^{-1}  \right] \right) + \sigma^2 \label{linear} \newline
-&amp;= \frac{\sigma^2}{N} \mathrm{Tr} \left( (Var(X))^{-1}  Var(x_0) \right) + \sigma^2 \nonumber \newline
-&amp;= \frac{\sigma^2}{N} \mathrm{Tr} \left( I_{p} \right) + \sigma^2 \nonumber \newline
-&amp;= \frac{\sigma^2 p}{N} + \sigma^2 \label{exp_err}
+\mathbb{E}_{X_0} \left[ \mathbb{E}_{y_0 \mid X_0}\left[ MSE(\hat{y}_{0}) \right] \right] &amp;\rightarrow \frac{\sigma^2}{n} \mathbb{E}_{X_0} \left[ X_0^{\intercal} (Var(X))^{-1} X_0 \right] + \sigma^2 \nonumber \newline
+&amp;= \frac{\sigma^2}{n} \mathbb{E}_{X_0} \left[ \mathrm{Tr} \left( X_0^{\intercal} (Var(X))^{-1} X_0 \right) \right] + \sigma^2 \label{trace} \newline
+&amp;= \frac{\sigma^2}{n} \mathbb{E}_{X_0} \left[ \mathrm{Tr} \left( X_0 X_0^{\intercal} (Var(X))^{-1} \right) \right] + \sigma^2 \label{cyclic_trace} \newline
+&amp;= \frac{\sigma^2}{n} \mathrm{Tr} \left( \mathbb{E}_{X_0} \left[ X_0 X_0^{\intercal} (Var(X))^{-1}  \right] \right) + \sigma^2 \label{linear} \newline
+&amp;= \frac{\sigma^2}{n} \mathrm{Tr} \left( (Var(X))^{-1}  Var(x_0) \right) + \sigma^2 \nonumber \newline
+&amp;= \frac{\sigma^2}{n} \mathrm{Tr} \left( I_{p} \right) + \sigma^2 \nonumber \newline
+&amp;= \frac{\sigma^2 p}{n} + \sigma^2 \label{exp_err}
 \end{align}
 $$</p>
-<p>Here, we make use of the fact that $X_0^{\intercal} (Var(X))^{-1} X_0 \in \mathbb{R}$, and thus its trace is equal to itself in $\eqref{trace}$; the cyclic property of the trace in $\eqref{cyclic_trace}$; and the linearity of the trace in $\eqref{linear}$. The result in $\eqref{exp_err}$ shows that the expected error on the test set scales linearly with $\frac{p}{N}$. That is, as long as $p \ll N$ (or $\sigma^2$ is small), the growth in the expected error will be small.</p>
+<p>Here, we make use of the fact that $X_0^{\intercal} (Var(X))^{-1} X_0 \in \mathbb{R}$, and thus its trace is equal to itself in $\eqref{trace}$; the cyclic property of the trace in $\eqref{cyclic_trace}$; and the linearity of the trace in $\eqref{linear}$. The result in $\eqref{exp_err}$ shows that the expected error on the test set scales linearly with $\frac{p}{n}$. That is, as long as $p \ll n$ (or $\sigma^2$ is small), the growth in the expected error will be small.</p>
+<h2 id="gauss-markov">Gauss-Markov</h2>
+<p>This all quite naturally leads one to recall the Gauss-Markov theorem that underpins least squares: no other unbiased linear estimator of $\beta$ has a variance smaller than the least squares estimator $\hat{\beta}$. To see this, denote such an unbiased linear estimator of $\beta$ by $\tilde{\beta}$, with variance $Var(\tilde{\beta})$. Then by linearity of $\tilde{\beta}$, for some $M \in \mathbb{R}^{p \times n}$, we can express $\tilde{\beta}$ as</p>
+<p>$$
+\begin{align}
+\tilde{\beta} &amp;= (X^{\intercal}X)^{-1} X^{\intercal} + M \nonumber
+\end{align}
+$$</p>
+<p>which leads to</p>
+<p>$$
+\begin{align}
+\mathbb{E} [ \tilde{\beta} y] &amp;=  \left( (X^{\intercal}X)^{-1} X^{\intercal} + M \right) X \beta \nonumber \newline
+\implies MX &amp;= 0 \label{tilde_beta_eq}
+\end{align}
+$$</p>
+<p>since $\tilde{\beta}$ is unbiased. Using $\eqref{tilde_beta_eq}$, comparing $Var(\tilde{\beta})$ with $Var(\hat{\beta})$, we have that</p>
+<p>$$
+\begin{align}
+Var(\tilde{\beta}) &amp;= \left((X^{\intercal}X)^{-1} X^{\intercal} + M \right) \cdot Var(y) \cdot \left( X(X^{\intercal}X)^{-1} + M^{\intercal} \right) \nonumber \newline
+&amp;= \sigma^2 \left( (X^{\intercal}X)^{-1} + MM^{\intercal} \right) \nonumber \newline
+&amp;= Var(\hat{\beta}) + \sigma^2 MM^{\intercal} \nonumber
+\end{align}
+$$</p>
+<p>Note that $MM^{\intercal} \succeq 0$, and thus $Var(\tilde{\beta}) \succeq Var(\hat{\beta})$, which proves the result.</p>
 
 
 		<div id="disqus_thread"></div>
@@ -342,7 +365,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2021-06-10 21:41:19.665081 -0500 CDT m=&#43;0.184146326">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-06-20 13:54:36.010878 -0500 CDT m=&#43;0.203062405">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
