@@ -283,39 +283,40 @@ $$</p>
 X^{\intercal} X &amp;= Q \Lambda Q^{-1} \label{eigendecomp}
 \end{align}
 $$</p>
-<p>Equating $\eqref{eigendecomp}$ and $\eqref{svd}$, we have thus shown that the matrix of eigenvectors in $X^{\intercal}X$ are the same as the right singular vectors of $X$, and the square roots of the eigenvalues of $X^{\intercal}X$ are the same as the singular values of $X$. Now, recall that PCA is defined as an orthogonal linear transformation that maps the original data to a new coordinate system such that the projection along the $k^{th}$ coordinate is the $k^{th}$ largest for $k = 1, \dots, p$. More precisely, let the transformation be defined by the set of vectors $w_{(k)} \in \mathbb{R}^{p}$ that are applied to each row $x_{i} \in \mathbb{R}^{p}$ of $X$, such that the vector of <strong>principal component scores</strong> of $x_i$ transformed by $w_{(k)}$ is $t_{i,(k)} = [t_{1,(k)}, \dots, t_{p,(k)}]^{\intercal}$, where each entry of $t_{i,(k)}$ is given by</p>
+<p>Equating $\eqref{eigendecomp}$ and $\eqref{svd}$, we have thus shown that the matrix of eigenvectors in $X^{\intercal}X$ are the same as the right singular vectors of $X$, and the square roots of the eigenvalues of $X^{\intercal}X$ are the same as the singular values of $X$.</p>
+<p>Now, recall that PCA is defined as an orthogonal linear transformation that maps the original data to a new coordinate system such that the projection along the $k^{th}$ coordinate is the $k^{th}$ largest for $k = 1, \dots, p$. More precisely, let the transformation be defined by the set of vectors $w_{k} \in \mathbb{R}^{p}$ that are applied to each row $x_{i} \in \mathbb{R}^{p}$ of $X$, such that the vector of <strong>principal component scores</strong> of $x_i$ transformed by $w_{k}$ is $t^{i,k} = [t^{i,k}_{1}, \dots, t^{i,k}_{p}]^{\intercal}$, where each entry of $t^{i,k}$ is given by</p>
 <p>$$
 \begin{align}
-t_{i, (k)}  &amp;= x_i \cdot w_{(k)} \nonumber
+t_j^{i,k}  &amp;= x_{i,j} \cdot w_{k,j} \qquad \forall j = 1, \dots, p \nonumber
 \end{align}
 $$</p>
 <p>Define $X_{(k)}$ as $X$ after the first $k - 1$ principal components are removed. It follows that</p>
 <p>$$
 \begin{align}
-X_{(k)} &amp;= X - \sum_{s=1}^{k-1} X w_{(s)} w_{(s)}^{\intercal} \nonumber
+X_{(k)} &amp;= X - \sum_{s=1}^{k-1} X w_{s} w_{s}^{\intercal} \nonumber
 \end{align}
 $$</p>
-<p>and the $k^{th}$ weight vector $w_{(k)}$ can be computed as</p>
+<p>and the $k^{th}$ weight vector $w_{k}$ can be computed as</p>
 <p>$$
 \begin{align}
-w_{(k)} &amp;= \underset{| w | = 1}{\mathrm{argmax}} \left \{ |X_{(k)} w |^2 \right \} \nonumber \newline
+w_{k} &amp;= \underset{| w | = 1}{\mathrm{argmax}} \left \{ |X_{(k)} w |^2 \right \} \nonumber \newline
 &amp;= \mathrm{argmax} \left\{\frac{w^{\intercal} X_{(k)}^{\intercal} X_{(k)} w }{w^{\intercal}w} \right \} \label{optimprob}
 \end{align}
 $$</p>
-<p>Since $X^{\intercal}X$ is positive semi-definite, the solution to $\eqref{optimprob}$ is the $k^{th}$ largest eigenvector of $X^{\intercal}X$ and the value of the objective is the $k^{th}$ eigenvalue of $X^{\intercal}X$. It follows from above that the columns of $W$ are $w_{(1)}, \dots, w_{(p)}$,
+<p>Since $X^{\intercal}X$ is positive semi-definite, the solution to $\eqref{optimprob}$ is the $k^{th}$ largest eigenvector of $X^{\intercal}X$ and the value of the objective is the $k^{th}$ eigenvalue of $X^{\intercal}X$. It follows from above that the columns of $W$ are $w_{1}, \dots, w_{p}$,
 and the full principal components decomposition of $X$ can be given as</p>
 <p>$$
 \begin{align}
 T &amp;= XW \label{fullpca}
 \end{align}
 $$</p>
-<p>which maps a data vector $x_{i}$ from an original space of $p$ features to a new space of $p$ features which are uncorrelated over the dataset. Dimensionality reduction can thus we achieved by keeping only the first $L &lt; p$ principal components in $\eqref{fullpca}$, which gives the truncated transformation</p>
+<p>which maps a data vector $x_{i}$ from an original space of $p$ features to a new space of $p$ features which are uncorrelated over the dataset. Dimensionality reduction can thus we achieved by keeping only the first $l &lt; p$ principal components in $\eqref{fullpca}$, which gives the truncated transformation</p>
 <p>$$
 \begin{align}
-T_{L} &amp;= X W_{L} \nonumber
+T_{l} &amp;= X W_{l} \nonumber
 \end{align}
 $$</p>
-<p>where $W_{L} \in \mathbb{R}^{p \times L}$ and $T_{L} \in \mathbb{R}^{n \times L}$, where the columns of $W_{L}$ are the first $L$ columns of $W$ and therefore the first $L$ eigenvectors of $X^{\intercal}X$.</p>
+<p>where $W_{l} \in \mathbb{R}^{p \times l}$ and $T_{l} \in \mathbb{R}^{n \times l}$, where the columns of $W_{l}$ are the first $l$ columns of $W$ and therefore the first $l$ eigenvectors of $X^{\intercal}X$.</p>
 <h2 id="generalising-dimensionality-reduction">Generalising dimensionality reduction</h2>
 <p>In summary, PCA and other traditional tools for dimensionality reduction tend to project the original dataset onto a <strong>hyperplane</strong>, making the reduced coordinates easy to interpret. However, they are unable to account for nonlinear correlations in a dataset, which requires relaxing the assumption that the data can be modelled as a hyperplane and instead allow for it to lie on a general low-dimensional manifold of unknown shape and dimensionality. Other attempts to accommodate for nonlinear correlations map the data into a higher dimensional feature space with the hope that the correlations will become linearised and PCA can then be applied.</p>
 <p><a href="https://papers.nips.cc/paper/2399-optimal-manifold-representation-of-data-an-information-theoretic-approach.pdf">Chigirev and Bialek (2003)</a> formulate  dimensionality reduction as a compression problem, where the bottleneck is the information available to manifold coordinates. The optimal manifold is then the best reconstruction of the original dataset under the restriction that the coordinates can only be transmitted through a channel of fixed capacity.</p>
@@ -400,7 +401,7 @@ as a parameter in the above algorithm. That is, for a given value of $I$, we can
 
         		<footer>
 			<span>
-			&copy; <time datetime="2021-09-22 18:06:39.064958 -0500 CDT m=&#43;0.193415319">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-09-25 00:30:43.723117 -0500 CDT m=&#43;0.228070671">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
