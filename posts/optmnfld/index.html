@@ -300,7 +300,7 @@ $$</p>
 <p>$$
 \begin{align}
 w_{k} &amp;= \underset{| w | = 1}{\mathrm{argmax}} \left \{ |X_{(k)} w |^2 \right \} \nonumber \newline
-&amp;= \mathrm{argmax} \left\{\frac{w^{\intercal} X_{(k)}^{\intercal} X_{(k)} w }{w^{\intercal}w} \right \} \label{optimprob}
+&amp;= \underset{w}{\mathrm{argmax}} \left\{\frac{w^{\intercal} X_{(k)}^{\intercal} X_{(k)} w }{w^{\intercal}w} \right \} \label{optimprob}
 \end{align}
 $$</p>
 <p>Since $X^{\intercal}X$ is positive semi-definite, the solution to $\eqref{optimprob}$ is the $k^{th}$ largest eigenvector of $X^{\intercal}X$ and the value of the objective is the $k^{th}$ eigenvalue of $X^{\intercal}X$. It follows from above that the columns of $W$ are $w_{1}, \dots, w_{p}$,
@@ -401,7 +401,7 @@ as a parameter in the above algorithm. That is, for a given value of $I$, we can
 
         		<footer>
 			<span>
-			&copy; <time datetime="2021-09-25 00:48:47.463868 -0500 CDT m=&#43;0.261267845">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-10-07 20:52:21.048021 -0500 CDT m=&#43;0.244261299">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
