@@ -6,7 +6,16 @@
     <description>Recent content on verbose: 1</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 01 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 08 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linear Regression by Hand</title>
+      <link>/posts/gramschmidt/</link>
+      <pubDate>Fri, 08 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/gramschmidt/</guid>
+      <description>Let&amp;rsquo;s hope you never actually have to do this by hand</description>
+    </item>
+    
     <item>
       <title>More Notes on Least Squares</title>
       <link>/posts/moreleastsquares/</link>

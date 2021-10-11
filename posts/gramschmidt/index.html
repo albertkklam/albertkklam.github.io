@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Linear Regression by Hand &middot; verbose: 1</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		<link rel="stylesheet" href="/css/theorems.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="verbose: 1" />
+
+		
+		<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+
+	</head>
+
+    <body>
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<link href="/css/dark-mode.css" rel="stylesheet">
+		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">verbose: 1</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/posts/">
+                
+                <span>Blog</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/books/">
+                
+                <span>Books</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+</ul>
+				    <div class="js-toggle-wrapper">
+        <div class="js-toggle">
+            <div class="js-toggle-track">
+                <div class="js-toggle-track-check">
+                    <img src="data:image/png;base64,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" role="presentation" style="pointer-events: none;" width="16" height="16">
+                </div>
+                <div class="js-toggle-track-x">
+                    <img src="data:image/png;base64,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" role="presentation" style="pointer-events: none;" width="16" height="16">
+                </div>
+            </div>
+            <div class="js-toggle-thumb"></div>
+            <input class="js-toggle-screenreader-only" type="checkbox" aria-label="Switch between Dark and Light mode">
+        </div>
+    </div>
+
+    <style>
+         
+        
+        .js-toggle-wrapper {
+            display: table;
+            margin: 0 auto;
+        }
+        
+        .js-toggle {
+            touch-action: pan-x;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            background-color: transparent;
+            border: 0;
+            padding: 0;
+            -webkit-touch-callout: none;
+            user-select: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .js-toggle-screenreader-only {
+            border: 0;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+        }
+        
+        .js-toggle-track {
+            width: 50px;
+            height: 24px;
+            padding: 0;
+            border-radius: 30px;
+            background-color: hsl(222, 14%, 7%);
+            transition: all 0.2s ease;
+        }
+        
+        .js-toggle-track-check {
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            left: 5px;
+            top: 0px;
+            bottom: 0px;
+            margin-top: auto;
+            margin-bottom: auto;
+            line-height: 0;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        
+        .js-toggle--checked .js-toggle-track-check {
+            opacity: 1;
+            transition: opacity 0.25s ease;
+        }
+        
+        .js-toggle-track-x {
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            right: 5px;
+            top: 0px;
+            bottom: 0px;
+            margin-top: auto;
+            margin-bottom: auto;
+            line-height: 0;
+            opacity: 1;
+            transition: opacity 0.25s ease;
+        }
+        
+        .js-toggle--checked .js-toggle-track-x {
+            opacity: 0;
+        }
+        
+        .js-toggle-thumb {
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+            transform: translateX(0);
+        }
+        
+        .js-toggle--checked .js-toggle-thumb {
+            transform: translateX(26px);
+            border-color: #19ab27;
+        }
+        
+        .js-toggle--focus .js-toggle-thumb {
+            box-shadow: 0px 0px 2px 3px rgb(255, 167, 196);
+        }
+        
+        .js-toggle:active .js-toggle-thumb {
+            box-shadow: 0px 0px 5px 5px rgb(255, 167, 196);
+        }
+
+    </style>
+
+    <script>
+        var body = document.body;
+        var switcher = document.getElementsByClassName('js-toggle')[0];
+
+        
+        switcher.addEventListener("click", function() {
+            this.classList.toggle('js-toggle--checked');
+            this.classList.add('js-toggle--focus');
+            
+            if (this.classList.contains('js-toggle--checked')) {
+                body.classList.add('dark-mode');
+                
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                body.classList.remove('dark-mode');
+                setTimeout(function() {
+                    localStorage.removeItem('darkMode');
+                }, 100);
+            }
+        })
+
+        
+        if (localStorage.getItem('darkMode')) {
+            
+            switcher.classList.add('js-toggle--checked');
+            body.classList.add('dark-mode');
+        }
+
+    </script>
+
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        Albert Lam
+        <br>
+        <span>on&nbsp;</span><time datetime="2021-10-08 00:00:00 &#43;0000 UTC">October 8, 2021</time>
+</div>
+		<h1 class="post-title">Linear Regression by Hand</h1>
+<div class="post-line"></div>
+
+		
+
+		<h2 id="univariate-regression">Univariate Regression</h2>
+<p>Suppose we have the linear model $y = x \beta + \epsilon$, where $y, x, \epsilon \in \mathbb{R}^{n}$, $\beta \in \mathbb{R}$, and the entries of $\epsilon$ have zero mean, constant variance $\sigma^2$, and are uncorrelated with each other. Then, regressing $y$ on $x$ gives</p>
+<p>$$
+\begin{align}
+\hat{\beta} &amp;= \frac{x^{\intercal} y}{x^{\intercal} x} \label{univariate_x}
+\end{align}
+$$</p>
+<p>Now, suppose we add an intercept $x_0 = \mathbf{1} \in \mathbb{R}^{n}$, and its corresponding coefficient $\beta_0 \in \mathbb{R}$ to the model, so that $y = x_0 \beta_0 + x \beta + \epsilon$. Then, regressing $y$ on $x_0$ and $x$ gives</p>
+<p>$$
+\begin{align}
+\hat{\beta} &amp;= \frac{(x - \bar{x}\mathbf{1})^{\intercal} y}{(x - \bar{x}\mathbf{1})^{\intercal} (x - \bar{x}\mathbf{1})} \label{univariate_1x_1} \newline
+\hat{\beta}_0 \mathbf{1} &amp;= \hat{y} - x \hat{\beta} \nonumber \newline
+\hat{\beta}_0 \mathbf{1} \cdot \frac{\mathbf{1}}{\mathbf{1}^{\intercal} \mathbf{1}} &amp;= (\hat{y} - x \hat{\beta}) \cdot \frac{\mathbf{1}}{\mathbf{1}^{\intercal} \mathbf{1}} \nonumber \newline
+\hat{\beta}_0 &amp;= \bar{y} - \bar{x} \hat{\beta} \label{univariate_1x_0}
+\end{align}
+$$</p>
+<p>where $\bar{x}$ and $\bar{y}$ are the respective sample means of $x$ and $y$.</p>
+<h4 id="what-are-we-actually-doing-here">What are we actually doing here?</h4>
+<p>Comparing $\eqref{univariate_x}$ and $\eqref{univariate_1x_1}$, we see that the fitted $\beta$ when regressing $y$ on $x_0$ and $x$ is the same fitted $\beta$ when regressing $y$ on $x - \bar{x}\mathbf{1}$. That is, including an intercept in the regression of $y$ on $x$ results in a $\hat{\beta}$ that is equivalent to the $\hat{\beta}$ in a regression of $y$ on a mean-centred $x$ (and we then use this to solve for $\hat{\beta}_0$).</p>
+<h4 id="why">Why?</h4>
+<p>Suppose we were to regress $x$ on $x_0 = \mathbf{1}$ instead. Then, applying $\eqref{univariate_x}$, we (unsurpringly) have</p>
+<p>$$
+\begin{align}
+\hat{\beta}_0 &amp;= \frac{\mathbf{1}^{\intercal} x}{\mathbf{1}^{\intercal} \mathbf{1}} \nonumber \newline
+&amp;= \bar{x} \label{univariate_1x_0_tmp}
+\end{align}
+$$</p>
+<p>So, $z_0 = x - \bar{x} \mathbf{1}$ is the residual from regressing $x$ on $\mathbf{1}$, and then $\hat{\beta}$ from $\eqref{univariate_1x_1}$ is the regression of $y$ on $z_0$. Recall that the fitted response of a regression is the projection of the response on to the subspace spanned by the covariates. It follows that the residual is orthogonal to the subspace spanned by the covariates. In the regression of $x$ on $\mathbf{1}$, $z_0$ is therefore orthogonal to $\mathbf{1}$, and in the regression of $y$ on $z_0$, we are actually regressing $y$ on the component of $x$ that is orthogonal to $\mathbf{1}$.</p>
+<p>In total, we have shown that the regression of $y$ on $x_0 = \mathbf{1}$ and $x$ can be thought of as first regressing $x$ on $\mathbf{1}$, and then regressing $y$ on the residual $z_0 = x - \bar{x} \mathbf{1}$ to compute $\hat{\beta}$ using $\eqref{univariate_1x_1}$, and then solving for $\hat{\beta}_0$ using $\eqref{univariate_1x_0}$.</p>
+<h4 id="but-again-why-does-this-work">But again, why does this work?</h4>
+<p>Note that $\text{span}\{ \mathbf{1},x \} = \text{span}\{\mathbf{1},  x - \bar{x} \mathbf{1} \}$, so we are regressing $y$ on to the same subspace. If $x$ is not orthogonal to $\mathbf{1}$, then there is some correlation between $x$ and $\mathbf{1}$, and performing the usual least squares regression resolves this correlation. Alternatively, we can regress $y$ on to the same subspace where the vectors are orthogonal to each other, and resolve this correlation ourselves. Once we do this, we can follow this procedure to obtain $\hat{\beta}$, and then back-solve for the remaining coefficients.</p>
+<h2 id="multivariate-regression">Multivariate Regression</h2>
+<p>Following a similar argument as $\eqref{univariate_1x_1}$ and $\eqref{univariate_1x_0}$, in a two-variable regression of $y = x_1 \beta_1 + x_2 \beta_2 + \epsilon$, where $x_1, x_2 \in \mathbb{R}^{n}$,  $\beta_1, \beta_2 \in \mathbb{R}$, and $x_1 \perp x_2$, we have that</p>
+<p>$$
+\begin{align}
+\hat{\beta}_2 &amp;= \frac{x^{\intercal}_2 y}{x^{\intercal}_2 x_2} \label{univariate_x_2} \nonumber \newline
+\hat{\beta}_1 x_1  &amp;= \hat{y} - x_2 \hat{\beta}_2 \nonumber \newline
+\hat{\beta}_1 x_1 \cdot \frac{x_1}{x_1^{\intercal} x_1} &amp;= (\hat{y} - x_2 \hat{\beta}_2) \cdot \frac{x_1}{x_1^{\intercal} x_1} \nonumber \newline
+\hat{\beta}_1 &amp;= \frac{x_1^{\intercal} y}{x_1^{\intercal} x_1} \label{univariate_x_1} \nonumber
+\end{align}
+$$</p>
+<p>These are, of course, the same fitted coefficients if we were to regress $y$ on $x_1$ and $x_2$ separately (with no intercept), as per the result in $\eqref{univariate_x}$. This isn&rsquo;t all that interesting because we don&rsquo;t actually expect $x_1 \perp x_2$ in most cases.</p>
+<p>Suppose we have our familiar multivariate, least squares model $y = X \beta + \epsilon$, where $X = [\mathbf{1}, x_2, \dots, x_p] \in \mathbb{R}^{n \times p}$ includes a column for the intercept, and $\beta \in \mathbb{R}^{p}$ now. Recall that the procedure outlined in $\eqref{univariate_1x_1}$ and $\eqref{univariate_1x_0_tmp}$ essentially follows</p>
+<ol>
+<li>Define $z_1 = x_1 = \mathbf{1}$</li>
+<li>Regress $x_2$ on $x_1$ to obtain $\tilde{\beta}_{1, 2} = \frac{x_1^{\intercal} x_2}{x_1^{\intercal} x_1}$, and the residual $z_2 = x_2 - \tilde{\beta}_{1, 2} x_1$</li>
+<li>Regress $x_j$ on each of $z_1, z_2, \dots, z_{j-1}$ to obtain $\tilde{\beta}_{k,j} = \frac{z_k^{\intercal} x_j}{z_k^{\intercal} z_k}$ for $k = 1, \dots, j-1$, and the residual $z_j = x_j - \sum_{l=1}^{j-1} \tilde{\beta}_{l,j} z_{l}$ for $j = 3, \dots, p$</li>
+<li>Regress $y$ on $z_p$ to compute $\hat{\beta}_p = \frac{z_p^{\intercal} y}{z_p^{\intercal} z_p}$</li>
+</ol>
+<p>This is, of course, the famous Gram-Schmidt orthogonalisation procedure. Note that one can rearrange the columns $x_j$ in this procedure to be the ``last&quot; vector, and thus we can compute $\hat{\beta}_j$ for any $j = 1, \dots, p$. It follows that $\hat{\beta}_j$ is the regression of $y$ on the residual left over from regressing $x_j$ on each of $x_1, \dots, x_{j-1}, x_{j+1}, \dots, x_{p}$.</p>
+<p>Observe that if $x_j$ is highly correlated with other columns $x_k$ for $k \ne j$, then the resulting residual will be small, and the denominator in step 4 (which follows from $\eqref{univariate_x}$) will be very small, which causes $\hat{\beta}_j$ to be highly unstable. This is why we prefer our covariates to be uncorrelated (or near uncorrelated) with each other.</p>
+<h2 id="multivariate-regression-in-one-gram-schmidt-pass">Multivariate Regression in One Gram-Schmidt Pass</h2>
+<p>Notice that if we want to solve for all $\hat{\beta}_1, \dots, \hat{\beta}_p$ in $\hat{\beta}$, then we could be tempted to apply the Gram-Schmidt procedure for each $j \in \{1, \dots, p \}$, but this would require solving many regression problems. We alluded to back-solving for the remaining coefficients earlier, where we first solved for $\hat{\beta}$ and then computed $\hat{\beta}_0$ in the univariate setting. Extending this to the multivariate setting would reduce the need for multiple Gram-Schmidt passes. Specifically, we  want to solve for $\hat{\beta}_p$ using Gram-Schmidt, and then back-solve for $\hat{\beta}_1, \dots, \hat{\beta}_{p-1}$.</p>
+<p>Observe that step 3 of the Gram-Schmidt procedure can be rewritten as</p>
+<p>$$
+\begin{align}
+X &amp;= Z \Gamma \nonumber
+\end{align}
+$$</p>
+<p>where $Z = [z_1, \dots, z_p] \in \mathbb{R}^{n \times p}$, and $\Gamma \in \mathbb{R}^{p \times p}$ is the upper triangular matrix with $\Gamma_{k,j} = \tilde{\beta}_{k,j}$ for $k \ne j$ and $\Gamma_{k,k} = 1$ for $k = 1, \dots, p$. Normalising this with the diagonal matrix $D \in \mathbb{R}^{p \times p}$, where $D_{j,j} = \Vert z_j \Vert$ for $j = 1, \dots, p$ gives a QR decomposition of $X$ that follows</p>
+<p>$$
+\begin{align}
+X &amp;= (Z D^{-1}) (D \Gamma) \nonumber \newline
+&amp;= Q R \label{qr_decomposition}
+\end{align}
+$$</p>
+<p>where $Q \in \mathbb{R}^{n \times p}$ is a orthonormal matrix, and $R \in \mathbb{R}^{p \times p}$ is upper triangular. Recall that the least squares solution to $\hat{\beta}$ is given by</p>
+<p>$$
+\begin{align}
+(X^{\intercal}X) \hat{\beta} &amp;=  X^{\intercal} y \label{least_squares}
+\end{align}
+$$</p>
+<p>and substituting $\eqref{qr_decomposition}$ into $\eqref{least_squares}$ gives</p>
+<p>$$
+\begin{align}
+R^{\intercal} Q^{\intercal} Q R \hat{\beta} &amp;=  R^{\intercal} Q^{\intercal} y \nonumber \newline
+R \hat{\beta} &amp;= Q^{\intercal} y \label{least_squares_qr}
+\end{align}
+$$</p>
+<p>Now, the last entry of each side of $\eqref{least_squares_qr}$ is</p>
+<p>$$
+\begin{align}
+\Vert z_p \Vert \hat{\beta}_p &amp;= \frac{z_p^{\intercal} y}{\Vert z_p \Vert} \nonumber \newline
+\hat{\beta}_p &amp;= \frac{z_p^{\intercal} y}{z_p^{\intercal} z_p} \nonumber
+\end{align}
+$$</p>
+<p>which is the result from step 4 of Gram-Schmidt. Back-solving for entry $p-1$ can be done via</p>
+<p>$$
+\begin{align}
+R_{p-1, p-1} \hat{\beta}_{p-1} + R_{p-1, p} \hat{\beta}_{p} &amp;= \frac{z_{p-1}^{\intercal} y}{\Vert z_{p-1} \Vert} \nonumber \newline
+\Vert z_{p-1} \Vert \hat{\beta}_{p-1} + \Vert z_{p-1} \Vert \frac{z_{p-1}^{\intercal} z_p}{z_{p-1}^{\intercal} z_{p-1}} \hat{\beta}_{p} &amp;= \frac{z_{p-1}^{\intercal} y}{\Vert z_{p-1} \Vert} \nonumber \newline
+\hat{\beta}_{p-1} &amp;= \frac{z_{p-1}^{\intercal} y}{z_{p-1}^{\intercal} z_{p-1}} - \frac{z_{p-1}^{\intercal} z_p}{z_{p-1}^{\intercal} z_{p-1}} \hat{\beta}_{p} \nonumber
+\end{align}
+$$</p>
+<p>Likewise, we can back-solve for all the other remaining entries of $\hat{\beta}$.</p>
+<h2 id="a-python-implementation-of-gram-schmidt">A Python Implementation of Gram-Schmidt</h2>
+<p>Here is a simple implementation of the Gram-Schmidt procedure we outlined above. The main function is <code>gram_schmidt</code>, which utilises the helper functions <code>compute_gamma_and_residuals</code>, <code>compute_gamma_val</code>, and <code>compute_D</code>.</p>
+<p>We test this on a small toy example, and compare how well our implementation does to the <code>LinearRegression</code> implementation in sklearn. The actual $\beta$ used to generate the data is $\beta_0 = 0.5$, $\beta_1 = 2.5$, $\beta_2 = -1.44$, and you can see that the fitted coefficients from <code>LinearRegression</code> are very close to the true coefficients. Our implementation isn&rsquo;t too far off either!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+<span style="color:#f92672">from</span> sklearn.linear_model <span style="color:#f92672">import</span> LinearRegression
+
+n <span style="color:#f92672">=</span> <span style="color:#ae81ff">120</span>
+beta <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">2.5</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1.44</span>])
+p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(beta)[<span style="color:#ae81ff">0</span>]
+
+mu <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+sigma <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.098765</span>
+seed <span style="color:#f92672">=</span> <span style="color:#ae81ff">4321</span>
+rng <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>default_rng(seed)
+epsilon <span style="color:#f92672">=</span> rng<span style="color:#f92672">.</span>normal(mu, sigma, n)
+
+x1 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ones((n,<span style="color:#ae81ff">1</span>))
+x2 <span style="color:#f92672">=</span> rng<span style="color:#f92672">.</span>random((n,<span style="color:#ae81ff">1</span>))
+x3 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>repeat([<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>], n<span style="color:#f92672">/</span><span style="color:#ae81ff">5</span>)[:,np<span style="color:#f92672">.</span>newaxis]
+x <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>concatenate((x1,x2,x3), axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+y <span style="color:#f92672">=</span> x <span style="color:#f92672">@</span> beta <span style="color:#f92672">+</span> epsilon
+
+reg <span style="color:#f92672">=</span> LinearRegression()<span style="color:#f92672">.</span>fit(x, y)
+true_beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>append(reg<span style="color:#f92672">.</span>intercept_, reg<span style="color:#f92672">.</span>coef_[<span style="color:#ae81ff">1</span>:p])
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_gamma_val</span>(regressor, regressand):
+    <span style="color:#66d9ef">return</span> (regressor<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> regressand) <span style="color:#f92672">/</span> (regressor<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> regressor)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_gamma_and_residuals</span>(x):
+    n,p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(x)
+    gamma <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>diag(np<span style="color:#f92672">.</span>ones(p))
+    Z <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>empty((n,p))
+    Z[:,<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ones(n)
+    <span style="color:#66d9ef">for</span> j_idx <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,p):
+        <span style="color:#66d9ef">for</span> k_idx <span style="color:#f92672">in</span> range(p):
+            <span style="color:#66d9ef">if</span> k_idx <span style="color:#f92672">&lt;</span> j_idx:
+                gamma[k_idx, j_idx] <span style="color:#f92672">=</span> compute_gamma_val(Z[:, k_idx], x[:, j_idx])
+            <span style="color:#66d9ef">else</span>:
+                <span style="color:#66d9ef">pass</span>
+    Z[:,j_idx] <span style="color:#f92672">=</span> x[:,j_idx] <span style="color:#f92672">-</span> sum([gamma[i_idx,j_idx] <span style="color:#f92672">*</span> Z[:,i_idx] <span style="color:#66d9ef">for</span> i_idx <span style="color:#f92672">in</span> range(j_idx)])
+    <span style="color:#66d9ef">return</span> (gamma, Z)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_D</span>(residuals):
+    _,p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(residuals)
+    norms <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(residuals[:,col_idx]) <span style="color:#66d9ef">for</span> col_idx <span style="color:#f92672">in</span> range(p)])
+    D <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>diag(norms)
+    <span style="color:#66d9ef">return</span> D
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gram_schmidt</span>(x,y):
+    gamma, Z <span style="color:#f92672">=</span> compute_gamma_and_residuals(x)
+    D <span style="color:#f92672">=</span> compute_D(Z)
+    Q <span style="color:#f92672">=</span> Z <span style="color:#f92672">@</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>inv(D)
+    R <span style="color:#f92672">=</span> D <span style="color:#f92672">@</span> gamma
+    beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>solve(R, Q<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> y)
+    <span style="color:#66d9ef">return</span> beta_hat
+
+print(<span style="color:#e6db74">&#34;Beta hat from sklearn: &#34;</span>, true_beta_hat) <span style="color:#75715e"># this prints &#34;Beta hat from sklearn:  [ 0.49597804  2.48354263 -1.432845]&#34;</span>
+print(<span style="color:#e6db74">&#34;Beta hat from our G-S procedure:&#34;</span>, gram_schmidt(x,y)) <span style="color:#75715e"># this prints &#34;Beta hat from our G-S procedure: [ 0.42041058  2.46752273 -1.40497118]&#34;</span>
+
+</code></pre></div>
+
+		<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "https-albertkklam-github-com" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/moreleastsquares/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2021-10-10 22:28:07.022903 -0500 CDT m=&#43;0.333999024">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>
