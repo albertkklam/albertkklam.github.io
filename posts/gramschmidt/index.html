@@ -309,7 +309,7 @@ $$</p>
 <li>Regress $x_j$ on each of $z_1, z_2, \dots, z_{j-1}$ to obtain $\tilde{\beta}_{k,j} = \frac{z_k^{\intercal} x_j}{z_k^{\intercal} z_k}$ for $k = 1, \dots, j-1$, and the residual $z_j = x_j - \sum_{l=1}^{j-1} \tilde{\beta}_{l,j} z_{l}$ for $j = 3, \dots, p$</li>
 <li>Regress $y$ on $z_p$ to compute $\hat{\beta}_p = \frac{z_p^{\intercal} y}{z_p^{\intercal} z_p}$</li>
 </ol>
-<p>This is, of course, the famous Gram-Schmidt orthogonalisation procedure. Note that one can rearrange the columns $x_j$ in this procedure to be the ``last&quot; vector, and thus we can compute $\hat{\beta}_j$ for any $j = 1, \dots, p$. It follows that $\hat{\beta}_j$ is the regression of $y$ on the residual left over from regressing $x_j$ on each of $x_1, \dots, x_{j-1}, x_{j+1}, \dots, x_{p}$.</p>
+<p>This is, of course, the famous Gram-Schmidt orthogonalisation procedure. Note that one can rearrange the columns $x_j$ in this procedure to be the &ldquo;last&rdquo; vector, and thus we can compute $\hat{\beta}_j$ for any $j = 1, \dots, p$. It follows that $\hat{\beta}_j$ is the regression of $y$ on the residual left over from regressing $x_j$ on each of $x_1, \dots, x_{j-1}, x_{j+1}, \dots, x_{p}$.</p>
 <p>Observe that if $x_j$ is highly correlated with other columns $x_k$ for $k \ne j$, then the resulting residual will be small, and the denominator in step 4 (which follows from $\eqref{univariate_x}$) will be very small, which causes $\hat{\beta}_j$ to be highly unstable. This is why we prefer our covariates to be uncorrelated (or near uncorrelated) with each other.</p>
 <h2 id="multivariate-regression-in-one-gram-schmidt-pass">Multivariate Regression in One Gram-Schmidt Pass</h2>
 <p>Notice that if we want to solve for all $\hat{\beta}_1, \dots, \hat{\beta}_p$ in $\hat{\beta}$, then we could be tempted to apply the Gram-Schmidt procedure for each $j \in \{1, \dots, p \}$, but this would require solving many regression problems. We alluded to back-solving for the remaining coefficients earlier, where we first solved for $\hat{\beta}$ and then computed $\hat{\beta}_0$ in the univariate setting. Extending this to the multivariate setting would reduce the need for multiple Gram-Schmidt passes. Specifically, we  want to solve for $\hat{\beta}_p$ using Gram-Schmidt, and then back-solve for $\hat{\beta}_1, \dots, \hat{\beta}_{p-1}$.</p>
@@ -362,7 +362,7 @@ $$</p>
 <span style="color:#f92672">from</span> sklearn.linear_model <span style="color:#f92672">import</span> LinearRegression
 
 n <span style="color:#f92672">=</span> <span style="color:#ae81ff">120</span>
-beta <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">2.5</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1.44</span>])
+beta <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.5</span>,<span style="color:#ae81ff">2.5</span>,<span style="color:#f92672">-</span><span style="color:#ae81ff">1.44</span>])
 p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(beta)[<span style="color:#ae81ff">0</span>]
 
 mu <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
@@ -377,8 +377,8 @@ x3 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>re
 x <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>concatenate((x1,x2,x3), axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
 y <span style="color:#f92672">=</span> x <span style="color:#f92672">@</span> beta <span style="color:#f92672">+</span> epsilon
 
-reg <span style="color:#f92672">=</span> LinearRegression()<span style="color:#f92672">.</span>fit(x, y)
-true_beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>append(reg<span style="color:#f92672">.</span>intercept_, reg<span style="color:#f92672">.</span>coef_[<span style="color:#ae81ff">1</span>:p])
+reg <span style="color:#f92672">=</span> LinearRegression()<span style="color:#f92672">.</span>fit(x,y)
+true_beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>append(reg<span style="color:#f92672">.</span>intercept_,reg<span style="color:#f92672">.</span>coef_[<span style="color:#ae81ff">1</span>:p])
 
 <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_gamma_val</span>(regressor, regressand):
     <span style="color:#66d9ef">return</span> (regressor<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> regressand) <span style="color:#f92672">/</span> (regressor<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> regressor)
@@ -391,7 +391,7 @@ true_beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672"
     <span style="color:#66d9ef">for</span> j_idx <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,p):
         <span style="color:#66d9ef">for</span> k_idx <span style="color:#f92672">in</span> range(p):
             <span style="color:#66d9ef">if</span> k_idx <span style="color:#f92672">&lt;</span> j_idx:
-                gamma[k_idx, j_idx] <span style="color:#f92672">=</span> compute_gamma_val(Z[:, k_idx], x[:, j_idx])
+                gamma[k_idx, j_idx] <span style="color:#f92672">=</span> compute_gamma_val(Z[:,k_idx], x[:,j_idx])
             <span style="color:#66d9ef">else</span>:
                 <span style="color:#66d9ef">pass</span>
     Z[:,j_idx] <span style="color:#f92672">=</span> x[:,j_idx] <span style="color:#f92672">-</span> sum([gamma[i_idx,j_idx] <span style="color:#f92672">*</span> Z[:,i_idx] <span style="color:#66d9ef">for</span> i_idx <span style="color:#f92672">in</span> range(j_idx)])
@@ -408,7 +408,7 @@ true_beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672"
     D <span style="color:#f92672">=</span> compute_D(Z)
     Q <span style="color:#f92672">=</span> Z <span style="color:#f92672">@</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>inv(D)
     R <span style="color:#f92672">=</span> D <span style="color:#f92672">@</span> gamma
-    beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>solve(R, Q<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> y)
+    beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>solve(R,Q<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> y)
     <span style="color:#66d9ef">return</span> beta_hat
 
 print(<span style="color:#e6db74">&#34;Beta hat from sklearn: &#34;</span>, true_beta_hat) <span style="color:#75715e"># this prints &#34;Beta hat from sklearn:  [ 0.49597804  2.48354263 -1.432845]&#34;</span>
@@ -449,7 +449,7 @@ print(<span style="color:#e6db74">&#34;Beta hat from our G-S procedure:&#34;</sp
 
         		<footer>
 			<span>
-			&copy; <time datetime="2021-10-24 20:57:43.745723 -0500 CDT m=&#43;0.283039658">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-10-25 19:17:46.881223 -0500 CDT m=&#43;0.314163911">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
