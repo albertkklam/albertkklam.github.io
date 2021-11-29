@@ -284,7 +284,7 @@ X^{\intercal} X &amp;= Q \Lambda Q^{-1} \label{eigendecomp}
 \end{align}
 $$</p>
 <p>Equating $\eqref{eigendecomp}$ and $\eqref{svd}$, we have thus shown that the matrix of eigenvectors in $X^{\intercal}X$ are the same as the right singular vectors of $X$, and the square roots of the eigenvalues of $X^{\intercal}X$ are the same as the singular values of $X$.</p>
-<p>Now, recall that PCA is defined as an orthogonal linear transformation that maps the original data to a new coordinate system such that the projection along the $k^{th}$ coordinate is the $k^{th}$ largest for $k = 1, \dots, p$. More precisely, let the transformation be defined by the set of vectors $w_{k} \in \mathbb{R}^{p}$ that are applied to each row $x_{i} \in \mathbb{R}^{p}$ of $X$, such that the vector of <strong>principal component scores</strong> of $x_i$ transformed by $w_{k}$ is $t^{i,k} = [t^{i,k}_{1}, \dots, t^{i,k}_{p}]^{\intercal}$, where each entry of $t^{i,k}$ is given by</p>
+<p>Now, recall that PCA is defined as an orthogonal linear transformation that maps the original data to a new coordinate system such that the projection along the $k^{th}$ coordinate is the $k^{th}$ largest for $k = 1, \dots, p$. More precisely, let the transformation be defined by the set of vectors $w_{k} \in \mathbb{R}^{p}$ that are applied to each row $x_{i} \in \mathbb{R}^{p}$ of $X$, such that the vector of <strong>principal component scores</strong> of $x_i$ transformed by $w_{k}$ is $t^{i,k} = [t^{i,k}<em>{1}, \dots, t^{i,k}</em>{p}]^{\intercal}$, where each entry of $t^{i,k}$ is given by</p>
 <p>$$
 \begin{align}
 t_j^{i,k}  &amp;= x_{i,j} \cdot w_{k,j} \qquad \forall j = 1, \dots, p \nonumber
@@ -401,7 +401,7 @@ as a parameter in the above algorithm. That is, for a given value of $I$, we can
 
         		<footer>
 			<span>
-			&copy; <time datetime="2021-10-25 19:17:46.77525 -0500 CDT m=&#43;0.208189080">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2021-11-29 15:27:13.0222 -0600 CST m=&#43;0.108355127">2021</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
