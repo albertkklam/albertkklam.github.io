@@ -263,21 +263,21 @@
 		<h2 id="the-arxiv-book-club">The arXiv Book Club</h2>
 <p>A few friends and I started a reading group earlier this month since we&rsquo;re all hanging out in Chicago over the summer. This is the first of (hopefully) many posts related to various topics we cover over the next few months. Our entree (this post) summarises the theoretical results from the seminal paper on the Indian Buffet Process by <a href="http://www.jmlr.org/papers/volume12/griffiths11a/griffiths11a.pdf">Griffiths and Ghahramani (2011)</a>.</p>
 <h2 id="preliminaries">Preliminaries</h2>
-<p>For random variables $A$ and $B$, <strong>Bayes' rule</strong> gives us</p>
+<p>For random variables $A$ and $B$, <strong>Bayes&rsquo; rule</strong> gives us</p>
 <p>$$
 \begin{align}
 P(B \mid A) &amp;= \frac{P(B \cap A)}{P(A)} \nonumber \newline
 &amp;= \frac{P(A \mid B) \cdot P(B)}{P(A)} \label{bayesrule}
 \end{align}
 $$</p>
-<p>Now, suppose we have some hypothetical distribution $X$ from which data can be drawn from, and some hypothetical distribution $\theta$ from which the parameters of $X$ can be drawn from. Then, a natural problem is to find the value(s) of $\theta$ that best explains the observed data from $X$. Applying Bayes' rule from $\eqref{bayesrule}$ is one approach</p>
+<p>Now, suppose we have some hypothetical distribution $X$ from which data can be drawn from, and some hypothetical distribution $\theta$ from which the parameters of $X$ can be drawn from. Then, a natural problem is to find the value(s) of $\theta$ that best explains the observed data from $X$. Applying Bayes&rsquo; rule from $\eqref{bayesrule}$ is one approach</p>
 <p>$$
 \begin{align}
 P(\theta \mid X) &amp;= \frac{P(X \mid \theta) \cdot P(\theta)}{P(X)} \nonumber \newline
 &amp;\propto P(X \mid \theta) \cdot P(\theta) \nonumber
 \end{align}
 $$</p>
-<p>Here, $P(\theta)$ is called the <strong>prior</strong> distribution of $\theta$, which represents the distribution of $\theta$ values before any data is observed, $P(X \mid \theta)$ is the <strong>likelihood</strong>, which represents how likely we are of observing the current instance of $X$ given the $\theta$ parameter values, and $P(X)$ is the likelihood marginalised over all possible $\theta$ values. Bayes' rule tells us that we can update the prior of $\theta$ using observations from $X$ so that our belief in the value of $\theta$ reflects the information we currently have &ndash; we call this updated distribution $P(\theta \mid X)$ the <strong>posterior</strong> distribution of $\theta$.</p>
+<p>Here, $P(\theta)$ is called the <strong>prior</strong> distribution of $\theta$, which represents the distribution of $\theta$ values before any data is observed, $P(X \mid \theta)$ is the <strong>likelihood</strong>, which represents how likely we are of observing the current instance of $X$ given the $\theta$ parameter values, and $P(X)$ is the likelihood marginalised over all possible $\theta$ values. Bayes&rsquo; rule tells us that we can update the prior of $\theta$ using observations from $X$ so that our belief in the value of $\theta$ reflects the information we currently have &ndash; we call this updated distribution $P(\theta \mid X)$ the <strong>posterior</strong> distribution of $\theta$.</p>
 <h2 id="motivating-infinite-mixture-models">Motivating infinite mixture models</h2>
 <p>We will consider a simple example to make some of these ideas more concrete. Suppose we are the owners of a supermarket and we are interested in better understanding the different types of customers that shop in our store. We have access to the purchasing history of each customer, including information such as which items they purchase, at what price they purchase them at, when they purchase those items, and how many they purchase at one time. We want to use this data to infer attributes of each customer that are naturally unknown, such as their price elasticity, whether they live by themselves or as part of a large family, and whether they are young or old. The intention is to use these attributes to improve store-level operations and ensure customer satisfaction remains high.</p>
 <p>This example is a classic unsupervised learning problem, where each customer represents an observation, their purchasing history can be summarized as observable features associated with each observation, and we want to make a prediction that classifies each observation into some unobservable customer-type category. In the literature, the hidden customer category is more generally referred to as a <strong>latent variable</strong> (or latent feature) in such models, and each category itself is referred to as a <strong>class</strong> of that latent variable.</p>
@@ -426,7 +426,7 @@ $$</p>
 
 		<div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -457,7 +457,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2022-02-27 06:52:05.071524 -0600 CST m=&#43;0.196280081">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-03-07 20:08:48.111056 -0600 CST m=&#43;0.088834400">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 

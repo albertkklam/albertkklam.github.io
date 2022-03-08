@@ -358,67 +358,66 @@ $$</p>
 <h2 id="a-python-implementation-of-gram-schmidt">A Python Implementation of Gram-Schmidt</h2>
 <p>Here is a simple implementation of the Gram-Schmidt procedure we outlined above. The main function is <code>gram_schmidt</code>, which utilises the helper functions <code>compute_gamma_and_residuals</code>, <code>compute_gamma_val</code>, and <code>compute_D</code>.</p>
 <p>We test this on a small toy example, and compare how well our implementation does to the <code>LinearRegression</code> implementation in sklearn. The actual $\beta$ used to generate the data is $\beta_0 = 0.5$, $\beta_1 = 2.5$, $\beta_2 = -1.44$, and you can see that the fitted coefficients from <code>LinearRegression</code> are very close to the true coefficients. Our implementation isn&rsquo;t too far off either!</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
-<span style="color:#f92672">from</span> sklearn.linear_model <span style="color:#f92672">import</span> LinearRegression
-
-n <span style="color:#f92672">=</span> <span style="color:#ae81ff">120</span>
-beta <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.5</span>,<span style="color:#ae81ff">2.5</span>,<span style="color:#f92672">-</span><span style="color:#ae81ff">1.44</span>])
-p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(beta)[<span style="color:#ae81ff">0</span>]
-
-mu <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-sigma <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.098765</span>
-seed <span style="color:#f92672">=</span> <span style="color:#ae81ff">4321</span>
-rng <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>default_rng(seed)
-epsilon <span style="color:#f92672">=</span> rng<span style="color:#f92672">.</span>normal(mu, sigma, n)
-
-x1 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ones((n,<span style="color:#ae81ff">1</span>))
-x2 <span style="color:#f92672">=</span> rng<span style="color:#f92672">.</span>random((n,<span style="color:#ae81ff">1</span>))
-x3 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>repeat([<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>], n<span style="color:#f92672">/</span><span style="color:#ae81ff">5</span>)[:,np<span style="color:#f92672">.</span>newaxis]
-x <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>concatenate((x1,x2,x3), axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
-y <span style="color:#f92672">=</span> x <span style="color:#f92672">@</span> beta <span style="color:#f92672">+</span> epsilon
-
-reg <span style="color:#f92672">=</span> LinearRegression()<span style="color:#f92672">.</span>fit(x,y)
-true_beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>append(reg<span style="color:#f92672">.</span>intercept_,reg<span style="color:#f92672">.</span>coef_[<span style="color:#ae81ff">1</span>:p])
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_gamma_val</span>(regressor, regressand):
-    <span style="color:#66d9ef">return</span> (regressor<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> regressand) <span style="color:#f92672">/</span> (regressor<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> regressor)
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_gamma_and_residuals</span>(x):
-    n,p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(x)
-    gamma <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>diag(np<span style="color:#f92672">.</span>ones(p))
-    Z <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>empty((n,p))
-    Z[:,<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ones(n)
-    <span style="color:#66d9ef">for</span> j_idx <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,p):
-        <span style="color:#66d9ef">for</span> k_idx <span style="color:#f92672">in</span> range(p):
-            <span style="color:#66d9ef">if</span> k_idx <span style="color:#f92672">&lt;</span> j_idx:
-                gamma[k_idx, j_idx] <span style="color:#f92672">=</span> compute_gamma_val(Z[:,k_idx], x[:,j_idx])
-            <span style="color:#66d9ef">else</span>:
-                <span style="color:#66d9ef">pass</span>
-    Z[:,j_idx] <span style="color:#f92672">=</span> x[:,j_idx] <span style="color:#f92672">-</span> sum([gamma[i_idx,j_idx] <span style="color:#f92672">*</span> Z[:,i_idx] <span style="color:#66d9ef">for</span> i_idx <span style="color:#f92672">in</span> range(j_idx)])
-    <span style="color:#66d9ef">return</span> (gamma, Z)
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_D</span>(residuals):
-    _,p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(residuals)
-    norms <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(residuals[:,col_idx]) <span style="color:#66d9ef">for</span> col_idx <span style="color:#f92672">in</span> range(p)])
-    D <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>diag(norms)
-    <span style="color:#66d9ef">return</span> D
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gram_schmidt</span>(x,y):
-    gamma, Z <span style="color:#f92672">=</span> compute_gamma_and_residuals(x)
-    D <span style="color:#f92672">=</span> compute_D(Z)
-    Q <span style="color:#f92672">=</span> Z <span style="color:#f92672">@</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>inv(D)
-    R <span style="color:#f92672">=</span> D <span style="color:#f92672">@</span> gamma
-    beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>solve(R,Q<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> y)
-    <span style="color:#66d9ef">return</span> beta_hat
-
-print(<span style="color:#e6db74">&#34;Beta hat from sklearn: &#34;</span>, true_beta_hat) <span style="color:#75715e"># this prints &#34;Beta hat from sklearn:  [ 0.49597804  2.48354263 -1.432845]&#34;</span>
-print(<span style="color:#e6db74">&#34;Beta hat from our G-S procedure:&#34;</span>, gram_schmidt(x,y)) <span style="color:#75715e"># this prints &#34;Beta hat from our G-S procedure: [ 0.42041058  2.46752273 -1.40497118]&#34;</span>
-
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.linear_model <span style="color:#f92672">import</span> LinearRegression
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> <span style="color:#ae81ff">120</span>
+</span></span><span style="display:flex;"><span>beta <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">0.5</span>,<span style="color:#ae81ff">2.5</span>,<span style="color:#f92672">-</span><span style="color:#ae81ff">1.44</span>])
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(beta)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mu <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>sigma <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.098765</span>
+</span></span><span style="display:flex;"><span>seed <span style="color:#f92672">=</span> <span style="color:#ae81ff">4321</span>
+</span></span><span style="display:flex;"><span>rng <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>default_rng(seed)
+</span></span><span style="display:flex;"><span>epsilon <span style="color:#f92672">=</span> rng<span style="color:#f92672">.</span>normal(mu, sigma, n)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x1 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ones((n,<span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>x2 <span style="color:#f92672">=</span> rng<span style="color:#f92672">.</span>random((n,<span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>x3 <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>repeat([<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>], n<span style="color:#f92672">/</span><span style="color:#ae81ff">5</span>)[:,np<span style="color:#f92672">.</span>newaxis]
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>concatenate((x1,x2,x3), axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> x <span style="color:#f92672">@</span> beta <span style="color:#f92672">+</span> epsilon
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>reg <span style="color:#f92672">=</span> LinearRegression()<span style="color:#f92672">.</span>fit(x,y)
+</span></span><span style="display:flex;"><span>true_beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>append(reg<span style="color:#f92672">.</span>intercept_,reg<span style="color:#f92672">.</span>coef_[<span style="color:#ae81ff">1</span>:p])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_gamma_val</span>(regressor, regressand):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (regressor<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> regressand) <span style="color:#f92672">/</span> (regressor<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> regressor)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_gamma_and_residuals</span>(x):
+</span></span><span style="display:flex;"><span>    n,p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(x)
+</span></span><span style="display:flex;"><span>    gamma <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>diag(np<span style="color:#f92672">.</span>ones(p))
+</span></span><span style="display:flex;"><span>    Z <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>empty((n,p))
+</span></span><span style="display:flex;"><span>    Z[:,<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>ones(n)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j_idx <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>,p):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> k_idx <span style="color:#f92672">in</span> range(p):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> k_idx <span style="color:#f92672">&lt;</span> j_idx:
+</span></span><span style="display:flex;"><span>                gamma[k_idx, j_idx] <span style="color:#f92672">=</span> compute_gamma_val(Z[:,k_idx], x[:,j_idx])
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    Z[:,j_idx] <span style="color:#f92672">=</span> x[:,j_idx] <span style="color:#f92672">-</span> sum([gamma[i_idx,j_idx] <span style="color:#f92672">*</span> Z[:,i_idx] <span style="color:#66d9ef">for</span> i_idx <span style="color:#f92672">in</span> range(j_idx)])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (gamma, Z)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compute_D</span>(residuals):
+</span></span><span style="display:flex;"><span>    _,p <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>shape(residuals)
+</span></span><span style="display:flex;"><span>    norms <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>norm(residuals[:,col_idx]) <span style="color:#66d9ef">for</span> col_idx <span style="color:#f92672">in</span> range(p)])
+</span></span><span style="display:flex;"><span>    D <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>diag(norms)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> D
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">gram_schmidt</span>(x,y):
+</span></span><span style="display:flex;"><span>    gamma, Z <span style="color:#f92672">=</span> compute_gamma_and_residuals(x)
+</span></span><span style="display:flex;"><span>    D <span style="color:#f92672">=</span> compute_D(Z)
+</span></span><span style="display:flex;"><span>    Q <span style="color:#f92672">=</span> Z <span style="color:#f92672">@</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>inv(D)
+</span></span><span style="display:flex;"><span>    R <span style="color:#f92672">=</span> D <span style="color:#f92672">@</span> gamma
+</span></span><span style="display:flex;"><span>    beta_hat <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linalg<span style="color:#f92672">.</span>solve(R,Q<span style="color:#f92672">.</span>T <span style="color:#f92672">@</span> y)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> beta_hat
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Beta hat from sklearn: &#34;</span>, true_beta_hat) <span style="color:#75715e"># this prints &#34;Beta hat from sklearn:  [ 0.49597804  2.48354263 -1.432845]&#34;</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Beta hat from our G-S procedure:&#34;</span>, gram_schmidt(x,y)) <span style="color:#75715e"># this prints &#34;Beta hat from our G-S procedure: [ 0.42041058  2.46752273 -1.40497118]&#34;</span>
+</span></span></code></pre></div>
 
 		<div id="disqus_thread"></div>
 <script type="application/javascript">
-    var disqus_config = function () {
+    window.disqus_config = function () {
     
     
     
@@ -449,7 +448,7 @@ print(<span style="color:#e6db74">&#34;Beta hat from our G-S procedure:&#34;</sp
 
         		<footer>
 			<span>
-			&copy; <time datetime="2022-02-27 06:52:05.094523 -0600 CST m=&#43;0.219278906">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-03-07 20:08:48.146516 -0600 CST m=&#43;0.124294249">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
