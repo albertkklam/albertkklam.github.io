@@ -306,7 +306,7 @@ $$</p>
 <ol>
 <li>Define $z_1 = x_1 = \mathbf{1}$</li>
 <li>Regress $x_2$ on $x_1$ to obtain $\tilde{\beta}_{1, 2} = \frac{x_1^{\intercal} x_2}{x_1^{\intercal} x_1}$, and the residual $z_2 = x_2 - \tilde{\beta}_{1, 2} x_1$</li>
-<li>Regress $x_j$ on each of $z_1, z_2, \dots, z_{j-1}$ to obtain $\tilde{\beta}<em>{k,j} = \frac{z_k^{\intercal} x_j}{z_k^{\intercal} z_k}$ for $k = 1, \dots, j-1$, and the residual $z_j = x_j - \sum</em>{l=1}^{j-1} \tilde{\beta}<em>{l,j} z</em>{l}$ for $j = 3, \dots, p$</li>
+<li>Regress $x_j$ on each of $z_1, z_2, \dots, z_{j-1}$ to obtain $\tilde{\beta}_{k,j} = \frac{z_k^{\intercal} x_j}{z_k^{\intercal} z_k}$ for $k = 1, \dots, j-1$, and the residual $z_j = x_j - \sum_{l=1}^{j-1} \tilde{\beta}_{l,j} z_{l}$ for $j = 3, \dots, p$</li>
 <li>Regress $y$ on $z_p$ to compute $\hat{\beta}_p = \frac{z_p^{\intercal} y}{z_p^{\intercal} z_p}$</li>
 </ol>
 <p>This is, of course, the famous Gram-Schmidt orthogonalisation procedure. Note that one can rearrange the columns $x_j$ in this procedure to be the &ldquo;last&rdquo; vector, and thus we can compute $\hat{\beta}_j$ for any $j = 1, \dots, p$. It follows that $\hat{\beta}_j$ is the regression of $y$ on the residual left over from regressing $x_j$ on each of $x_1, \dots, x_{j-1}, x_{j+1}, \dots, x_{p}$.</p>
@@ -448,7 +448,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2022-03-10 11:22:01.507535 -0600 CST m=&#43;0.138305934">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-03-10 11:24:21.886338 -0600 CST m=&#43;0.116963299">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
