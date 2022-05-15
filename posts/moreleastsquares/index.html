@@ -261,7 +261,7 @@
 		
 
 		<h2 id="continuing-on-from-last-time">Continuing on from last time</h2>
-<p>This is actually based on a couple of exercises from Chapters 2 and 3 of Hastie et al. <em>&ldquo;The Elements of Statistical Learning&rdquo;</em>, which reminded me of my <a href="/posts/leastsquares/">post from yesteryear</a>, which then reminded me that I haven&rsquo;t blogged in a quite a while&hellip;</p>
+<p>This is actually based on a couple of exercises from Chapters 2 and 3 of Hastie et al. <em>&ldquo;The Elements of Statistical Learning&rdquo;</em>, which reminded me of my <a href="/posts/leastsquares/">post from yesteryear</a>, which then reminded me that I haven&rsquo;t blogged in quite a while&hellip;</p>
 <p>Let $y \in \mathbb{R}^{n}$ be the response to a design matrix $X \in \mathbb{R}^{n \times p}$, where $n$ is the number of observations in the given dataset, and $p$ is the number of covariates. Our linear model is then of the form</p>
 <p>$$
 \begin{equation}
@@ -293,7 +293,7 @@ Var(\hat{y}) &amp;= Var(X \hat{\beta}) \nonumber \newline
 &amp;= \sigma^2 X (X^{\intercal} X)^{-1} X^{\intercal} \label{varhaty}
 \end{align}
 $$</p>
-<p>Recall that $\hat{y}$ is unbiased since $\mathbb{E}\left[\hat{y} \right] = \mathbb{E}\left[ y \right]$, and $MSE(\hat{y}) = Var(\hat{y})$. Thus, comparing $\eqref{msehaty}$ and $\eqref{varhaty}$, we see that we have incurred an additional $\sigma^2$ term in the error when $(X_0, y_0) \notin \{ X,y \}$. This result actually isn&rsquo;t that surprising &ndash; the expected error on a test set will always be greater than the error on the training set.</p>
+<p>Recall that $\hat{y}$ is unbiased since $\mathbb{E}\left[\hat{y} \right] = \mathbb{E}\left[ y \right]$, and $MSE(\hat{y}) = Var(\hat{y})$. Thus, comparing $\eqref{msehaty}$ and $\eqref{varhaty}$, we see that we have incurred an additional $\sigma^2$ term in the error when $(X_0, y_0) \notin \{ (X,y) \}$. This result actually isn&rsquo;t that surprising &ndash; the expected error on a test set will always be greater than the error on the training set.</p>
 <h2 id="the-benefits-of-more-data">The benefits of more data</h2>
 <p>If $X^\intercal X \rightarrow n Var(X)$, continuing from $\eqref{msehaty}$, we also have</p>
 <p>$$
@@ -366,7 +366,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2022-05-13 21:48:44.353134 -0500 CDT m=&#43;0.094539112">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-05-15 08:49:57.790964 -0500 CDT m=&#43;0.221682313">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
