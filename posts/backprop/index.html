@@ -281,9 +281,9 @@ $$</p>
 <p>$$
 \begin{align}
 \frac{\delta L}{\delta w_{(j, j+1)}} &amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta w_{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}<em>l} \cdot \frac{\delta \tilde{h}<em>l}{\delta w</em>{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}<em>l} \cdot \frac{\delta \tilde{h}<em>l}{\delta \tilde{h}</em>{l-1}} \cdot \dots \cdot \frac{\delta \tilde{h}</em>{j+1}}{\delta w</em>{(j, j+1)}} \nonumber \newline
-&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}<em>l} \cdot \left[ \prod</em>{k=j+1}^{l-1} \frac{\delta \tilde{h}<em>{k+1}}{\delta \tilde{h}</em>{k}} \right] \cdot \frac{\delta \tilde{h}<em>{j+1}}{\delta w</em>{(j, j+1)}} \label{onevar_grad_h}
+&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}_l} \cdot \frac{\delta \tilde{h}_l}{\delta w_{(j, j+1)}} \nonumber \newline
+&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}_l} \cdot \frac{\delta \tilde{h}_l}{\delta \tilde{h}_{l-1}} \cdot \dots \cdot \frac{\delta \tilde{h}_{j+1}}{\delta w_{(j, j+1)}} \nonumber \newline
+&amp;= \frac{\delta L}{\delta o} \cdot \frac{\delta o}{\delta \tilde{h}_l} \cdot \left[ \prod_{k=j+1}^{l-1} \frac{\delta \tilde{h}_{k+1}}{\delta \tilde{h}_{k}} \right] \cdot \frac{\delta \tilde{h}_{j+1}}{\delta w_{(j, j+1)}} \label{onevar_grad_h}
 \end{align}
 $$</p>
 <p>However, if there is more than one unique path between $L$ and $w_{(j,j+1)}$, then $\eqref{onevar_grad_h}$ needs to be adjusted using the multivariable chain rule that essentially traverses along all viable paths in $\mathcal{P}$ from $o$ to $h_j$. Using $\eqref{layer_output}$, it follows that</p>
@@ -361,7 +361,7 @@ $$</p>
 
         		<footer>
 			<span>
-			&copy; <time datetime="2022-08-31 20:40:10.747072 -0500 CDT m=&#43;0.121541500">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2022-08-31 20:47:43.022039 -0500 CDT m=&#43;0.229182416">2022</time> Albert Lam. Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
