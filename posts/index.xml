@@ -6,78 +6,63 @@
     <description>Recent content in Posts on verbose: 1</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 08 Oct 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linear Regression by Hand</title>
       <link>/posts/gramschmidt/</link>
       <pubDate>Fri, 08 Oct 2021 00:00:00 +0000</pubDate>
-      
       <guid>/posts/gramschmidt/</guid>
       <description>Let&amp;rsquo;s hope you never actually have to do this by hand</description>
     </item>
-    
     <item>
       <title>More Notes on Least Squares</title>
       <link>/posts/moreleastsquares/</link>
       <pubDate>Thu, 01 Apr 2021 00:00:00 +0000</pubDate>
-      
       <guid>/posts/moreleastsquares/</guid>
       <description>The gift that keeps on giving</description>
     </item>
-    
     <item>
       <title>Improve Your Python Game</title>
       <link>/posts/decorators/</link>
       <pubDate>Sat, 23 Jan 2021 00:00:00 +0000</pubDate>
-      
       <guid>/posts/decorators/</guid>
       <description>I keep forgetting how Python decorators work, so future-me will be thankful I wrote this down</description>
     </item>
-    
     <item>
       <title>[Yet Another] Backpropagation by Hand [Blog Post]</title>
       <link>/posts/backprop/</link>
       <pubDate>Sat, 30 May 2020 00:00:00 +0000</pubDate>
-      
       <guid>/posts/backprop/</guid>
       <description>Automatic differentiation is so 2019</description>
     </item>
-    
     <item>
       <title>The Beauty in Simplicity</title>
       <link>/posts/optmnfld/</link>
       <pubDate>Wed, 10 Jul 2019 00:00:00 +0000</pubDate>
-      
       <guid>/posts/optmnfld/</guid>
       <description>When less-is-more meets data</description>
     </item>
-    
     <item>
       <title>All You Can Eat</title>
       <link>/posts/ibp/</link>
       <pubDate>Mon, 24 Jun 2019 00:00:00 +0000</pubDate>
-      
       <guid>/posts/ibp/</guid>
       <description>For Bayesians</description>
     </item>
-    
     <item>
       <title>Notes on Least Squares</title>
       <link>/posts/leastsquares/</link>
       <pubDate>Fri, 21 Dec 2018 00:00:00 +0000</pubDate>
-      
       <guid>/posts/leastsquares/</guid>
       <description>Everything is linear&amp;hellip;(sort of&amp;hellip; (in sufficiently high dimensional space))</description>
     </item>
-    
     <item>
       <title>Slack Notifications for your Spark Workflow</title>
       <link>/posts/slackspark/</link>
       <pubDate>Tue, 16 May 2017 00:00:00 +0000</pubDate>
-      
       <guid>/posts/slackspark/</guid>
       <description>Notifications to your Slack channel from Spark</description>
     </item>
-    
   </channel>
 </rss>
